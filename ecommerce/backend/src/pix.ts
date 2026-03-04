@@ -33,10 +33,9 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
   const { amount, description, externalId, customer } = request;
 
   const SAFEPAY_API_URL = 'https://api-payment.safefypay.com.br';
-  // Pega a variável injetada pelo Dokploy. Caso não encontre, usamos o fallback apenas para dev/teste local temporário.
   const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_3f5bfb46f5eb9a0595d729da4042f3d6c709ee24a49da32a81eb08d3cb8c2221';
 
-  // O payload de acordo com a documentação da SafeFyPay
+  // Payload structure based on SafeFyPay documentation
   const payload: any = {
     method: 'Pix',
     amount,
@@ -48,9 +47,9 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
   
   if (customer) {
     if (customer.name) payload.customerName = customer.name;
-    if (customer.document) payload.customerDocument = customer.document;
+    if (customer.document) payload.customerDocument = customer.document.replace(/\D/g, ''); // Ensure only numbers
     if (customer.email) payload.customerEmail = customer.email;
-    if (customer.phone) payload.customerPhone = customer.phone;
+    if (customer.phone) payload.customerPhone = customer.phone.replace(/\D/g, ''); // Ensure only numbers
   }
 
   const headers: Record<string, string> = {
@@ -65,17 +64,28 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
       body: JSON.stringify(payload),
     });
 
-    const responseJson: any = await apiResponse.json();
+    const rawText = await apiResponse.text();
+    let responseJson: any = {};
 
-    if (!apiResponse.ok || responseJson.error) {
-      throw new Error(responseJson.error?.message || responseJson.message || 'Falha ao comunicar com SafeFyPay');
+    try {
+      if (rawText) {
+        responseJson = JSON.parse(rawText);
+      }
+    } catch (parseError) {
+      console.error('Failed to parse SafeFyPay response. Raw body:', rawText);
+      throw new Error(`Resposta inválida do gateway (Status ${apiResponse.status}).`);
     }
 
-    // A resposta fica dentro de `data`
+    if (!apiResponse.ok || responseJson.error) {
+      throw new Error(responseJson.error?.message || responseJson.message || `Erro do Gateway: ${rawText}`);
+    }
+
     const data = responseJson.data;
 
-    // A SafeFyPay não retorna imagem do QR code, apenas o "copia e cola".
-    // Vamos gerar a imagem do QR Code usando a api do Google Chart / api.qrserver para o frontend não se preocupar com libs extras se possível.
+    if (!data) {
+       throw new Error(`Estrutura de resposta inesperada do Gateway. Body: ${rawText}`);
+    }
+
     const pixCopyPaste = data.pix?.copyAndPaste;
     const qrCodeImageUrl = pixCopyPaste 
       ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pixCopyPaste)}` 
@@ -89,7 +99,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
       method: data.method,
       description: data.description || description,
       pixCode: pixCopyPaste,
-      qrCode: pixCopyPaste, // Fallback para compatibilidade do frontend
+      qrCode: pixCopyPaste,
       qrCodeImage: qrCodeImageUrl, 
       expiresAt: data.expiresAt,
       createdAt: data.createdAt,
@@ -116,8 +126,18 @@ export async function getPaymentStatus(paymentId: string): Promise<PixPaymentRes
       headers,
     });
     
-    const responseJson: any = await apiResponse.json();
-    
+    const rawText = await apiResponse.text();
+    let responseJson: any = {};
+
+    try {
+      if (rawText) {
+        responseJson = JSON.parse(rawText);
+      }
+    } catch (parseError) {
+      console.error('Failed to parse SafeFyPay status response. Raw body:', rawText);
+      throw new Error(`Resposta de status inválida (Status ${apiResponse.status}).`);
+    }
+
     if (!apiResponse.ok || responseJson.error) {
       throw new Error(responseJson.error?.message || responseJson.message || 'Falha ao checar status no SafeFyPay');
     }
