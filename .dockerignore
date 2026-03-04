@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+package-lock.json
+
+# Build outputs
+dist
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docs
+*.md
+!README.md
+
+# Misc
+*.log
+*.tmp

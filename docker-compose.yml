@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    environment:
+      # O Nginx no frontend fará o proxy para 'http://backend:3001'
+      - VITE_API_URL=/api
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    # Variáveis de ambiente configuradas no Dokploy:
+    # SAFEPAY_SECRET_KEY=sua_chave_safepay
+    # CHECKIFY_API_KEY=sua_chave_checkify
