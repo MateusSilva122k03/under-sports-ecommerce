@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 export async function consultCpf(cpf: string) {
   const CHECKIFY_API_URL = 'https://api.checkify.space/api/v1/consultas/cpf';
-  const API_KEY = process.env.CHECKIFY_API_KEY || 'ck_4e5edf84e6b93778bb5f524c0337ffe42245890377c95aed1d79b67797e0a392';
+  const API_KEY = process.env.CHECKIFY_API_KEY || 'ck_8addbb6bd353a7a0aa184cacf6668dde09fa4500b99ff4828d2affb923c91b16';
 
   // Limpa tudo o que não for número
   const cleanCpf = cpf.replace(/\D/g, '');

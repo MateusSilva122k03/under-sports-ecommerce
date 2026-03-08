@@ -42,6 +42,10 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState<'normal' | 'sedex'>('normal');
+
+  const shippingCost = shippingMethod === 'sedex' ? 29.87 : 0;
+  const finalTotal = total + shippingCost;
 
   // Polling for payment status
   useEffect(() => {
@@ -139,7 +143,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
     setIsLoading(true); setError(null);
     try {
       const externalId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const amountInCents = Math.round(total * 100);
+      const amountInCents = Math.round(finalTotal * 100);
       const itemDescriptions = items.slice(0, 3).map(i => i.name).join(', ');
       const description = items.length > 3 ? `${itemDescriptions} +${items.length - 3} itens` : itemDescriptions;
       const response = await safePayService.createPixPayment(amountInCents, description, externalId);
@@ -166,7 +170,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
     onClose();
   };
 
-  const handleClose = () => { if (!paymentData || paymentStatus === 'Paid') onClose(); };
+  const handleClose = () => { onClose(); };
 
   return (
     <div className="fixed inset-0 z-50">
@@ -201,8 +205,18 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                 </div>
                 <div className="border-t border-zinc-800 mt-3 pt-3 space-y-1.5">
                   <div className="flex justify-between text-sm text-zinc-400">
-                    <span>Total</span>
+                    <span>Subtotal</span>
                     <span className="text-white">R$&nbsp;{total.toFixed(2).replace('.', ',')}</span>
+                  </div>
+                  {shippingCost > 0 && (
+                    <div className="flex justify-between text-sm text-zinc-400">
+                      <span>Frete (Sedex)</span>
+                      <span className="text-white">R$&nbsp;{shippingCost.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm text-zinc-400 font-bold pt-1">
+                    <span>Total</span>
+                    <span className="text-white text-base">R$&nbsp;{finalTotal.toFixed(2).replace('.', ',')}</span>
                   </div>
                 </div>
               </div>
@@ -283,6 +297,17 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                       <input type="text" value={addressData.state} onChange={e => setAddressData({ ...addressData, state: e.target.value.toUpperCase() })} className={INPUT} placeholder="UF" maxLength={2} autoComplete="address-level1" />
                     </div>
                   </div>
+                  <div className="pt-2">
+                    <label className={LABEL}>Método de Envio</label>
+                    <select 
+                      value={shippingMethod} 
+                      onChange={e => setShippingMethod(e.target.value as 'normal' | 'sedex')}
+                      className={`${INPUT} appearance-none cursor-pointer`}
+                    >
+                      <option value="normal">Frete Normal (Grátis)</option>
+                      <option value="sedex">Sedex Expresso (+ R$ 29,87)</option>
+                    </select>
+                  </div>
                 </div>
 
                 {error && (
@@ -330,9 +355,9 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                         <QrCode size={64} className="text-zinc-400" />
                       </div>
                     )}
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs px-3 py-1.5 rounded-full border border-zinc-700 flex items-center gap-1.5 shadow-lg">
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs px-3 py-1.5 rounded-full border border-zinc-700 flex items-center gap-1.5 shadow-lg whitespace-nowrap">
                       <Loader2 size={12} className="animate-spin text-zinc-400" />
-                      Aguardando...
+                      Aguardando pagamento
                     </div>
                   </div>
 
@@ -345,10 +370,10 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                   {paymentData.pixCode && (
                     <div className="mb-6 text-left">
                       <label className={LABEL}>Código PIX copia e cola</label>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col gap-2">
                         <input type="text" value={paymentData.pixCode} readOnly className={`${INPUT} text-xs font-mono`} />
-                        <button onClick={handleCopyPix} className="bg-zinc-800 hover:bg-zinc-700 px-4 rounded-lg transition-colors shrink-0 flex items-center justify-center" aria-label="Copiar código">
-                          {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} className="text-zinc-300" />}
+                        <button onClick={handleCopyPix} className="w-full bg-green-500 hover:bg-green-400 text-zinc-950 font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.3)] animate-pulse" aria-label="Copiar código">
+                          {copied ? <><Check size={18} /> Copiado com sucesso!</> : <><Copy size={18} /> Copiar Código PIX</>}
                         </button>
                       </div>
                     </div>

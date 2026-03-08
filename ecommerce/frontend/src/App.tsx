@@ -35,7 +35,13 @@ export default function App() {
 
   const currentCategory  = categories[activeCategory];
   const shuffledProducts = useMemo(
-    () => [...currentCategory.products].sort(() => Math.random() - 0.5),
+    () => {
+      const all = [...currentCategory.products];
+      const brazilShirts = all.filter(p => p.name.toLowerCase().includes('brasil'));
+      const otherShirts = all.filter(p => !p.name.toLowerCase().includes('brasil'));
+      const shuffledOthers = otherShirts.sort(() => Math.random() - 0.5);
+      return [...brazilShirts, ...shuffledOthers];
+    },
     [currentCategory.products]
   );
 

@@ -24,10 +24,12 @@ export default function ProductGridItem({ id, name, image, price }: ProductGridI
     navigate(`/product/${id}`);
   };
 
+  const isBrazil = name.toLowerCase().includes('brasil');
+
   return (
     <div
       onClick={handleClick}
-      className="bg-zinc-900 rounded-lg overflow-hidden flex flex-col h-full cursor-pointer group ring-1 ring-transparent hover:ring-zinc-700 transition-all duration-200"
+      className={`bg-zinc-900 rounded-lg overflow-hidden flex flex-col h-full cursor-pointer group ring-1 transition-all duration-200 ${isBrazil ? 'ring-yellow-400 ring-2' : 'ring-transparent hover:ring-zinc-700'}`}
     >
       {/* Image */}
       <div className="aspect-[3/4] bg-zinc-800 relative overflow-hidden">

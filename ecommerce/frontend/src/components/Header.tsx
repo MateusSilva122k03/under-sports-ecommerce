@@ -90,7 +90,7 @@ export default function Header({ activeCategory, onCategoryChange, onSearch }: H
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Buscar camisas, seleções..."
-                className="w-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 text-sm text-white px-4 py-2.5 focus:outline-none focus:bg-zinc-900 placeholder-zinc-600 transition-all rounded-lg"
+                className="w-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 text-base text-white px-4 py-2.5 focus:outline-none focus:bg-zinc-900 placeholder-zinc-600 transition-all rounded-lg"
               />
               <button
                 type="submit"
@@ -145,7 +145,7 @@ export default function Header({ activeCategory, onCategoryChange, onSearch }: H
                 onChange={handleSearchChange}
                 placeholder="Buscar camisas, seleções..."
                 autoFocus
-                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-600 text-sm text-white px-4 py-2.5 focus:outline-none placeholder-zinc-600 transition-all rounded-lg"
+                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-600 text-base text-white px-4 py-2.5 focus:outline-none placeholder-zinc-600 transition-all rounded-lg"
               />
               <button
                 type="submit"

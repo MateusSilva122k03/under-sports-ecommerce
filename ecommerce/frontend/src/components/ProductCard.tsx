@@ -41,8 +41,10 @@ export default function ProductCard({
     }
   };
 
+  const isBrazil = displayTitle.toLowerCase().includes('brasil');
+
   return (
-    <div className="flex flex-col group h-full justify-between bg-zinc-900/50 rounded-lg p-2 hover:bg-zinc-900 transition-colors duration-300">
+    <div className={`flex flex-col group h-full justify-between bg-zinc-900/50 rounded-lg p-2 hover:bg-zinc-900 transition-colors duration-300 ${isBrazil ? 'ring-2 ring-yellow-400' : ''}`}>
       <div>
         {/* Image container */}
         <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-zinc-900 mb-3">
