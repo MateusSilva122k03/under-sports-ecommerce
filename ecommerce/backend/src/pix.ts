@@ -33,7 +33,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
   const { amount, description, externalId, customer } = request;
 
   const SAFEPAY_API_URL = 'https://api-payment.safefypay.com.br';
-  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_e36cc2ffba6f8d9ec825eaaca0ad0227205ba26da5a03ab2981ef5527e53060a';
+  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_3f11374755b817aca84a0df151640cd39541c299a2e7a787e6cf4a7a004a3489';
 
   // Payload structure based on SafeFyPay documentation
   const payload: any = {
@@ -120,7 +120,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
 
 export async function getPaymentStatus(paymentId: string): Promise<PixPaymentResponse> {
   const SAFEPAY_API_URL = 'https://api-payment.safefypay.com.br';
-  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_e36cc2ffba6f8d9ec825eaaca0ad0227205ba26da5a03ab2981ef5527e53060a';
+  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_3f11374755b817aca84a0df151640cd39541c299a2e7a787e6cf4a7a004a3489';
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
