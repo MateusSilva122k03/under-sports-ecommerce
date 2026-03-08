@@ -41,7 +41,7 @@ export default function ProductCard({
     }
   };
 
-  const isBrazil = displayTitle.toLowerCase().includes('brasil');
+  const isBrazil = displayTitle.toLowerCase().includes('brasil') || displayTitle.toLowerCase().includes('brazil');
 
   return (
     <div className={`flex flex-col group h-full justify-between bg-zinc-900/50 rounded-lg p-2 hover:bg-zinc-900 transition-colors duration-300 ${isBrazil ? 'ring-2 ring-yellow-400' : ''}`}>

@@ -24,7 +24,7 @@ export default function ProductGridItem({ id, name, image, price }: ProductGridI
     navigate(`/product/${id}`);
   };
 
-  const isBrazil = name.toLowerCase().includes('brasil');
+  const isBrazil = name.toLowerCase().includes('brasil') || name.toLowerCase().includes('brazil');
 
   return (
     <div

@@ -37,8 +37,8 @@ export default function App() {
   const shuffledProducts = useMemo(
     () => {
       const all = [...currentCategory.products];
-      const brazilShirts = all.filter(p => p.name.toLowerCase().includes('brasil'));
-      const otherShirts = all.filter(p => !p.name.toLowerCase().includes('brasil'));
+      const brazilShirts = all.filter(p => p.name.toLowerCase().includes('brasil') || p.name.toLowerCase().includes('brazil'));
+      const otherShirts = all.filter(p => !p.name.toLowerCase().includes('brasil') && !p.name.toLowerCase().includes('brazil'));
       const shuffledOthers = otherShirts.sort(() => Math.random() - 0.5);
       return [...brazilShirts, ...shuffledOthers];
     },
