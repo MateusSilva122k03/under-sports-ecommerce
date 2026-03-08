@@ -33,7 +33,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
   const { amount, description, externalId, customer } = request;
 
   const SAFEPAY_API_URL = 'https://api-payment.safefypay.com.br';
-  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_3f5bfb46f5eb9a0595d729da4042f3d6c709ee24a49da32a81eb08d3cb8c2221';
+  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_e36cc2ffba6f8d9ec825eaaca0ad0227205ba26da5a03ab2981ef5527e53060a';
 
   // Payload structure based on SafeFyPay documentation
   const payload: any = {
@@ -58,6 +58,10 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
   };
 
   try {
+    console.log('📤 Enviando requisição para SafeFyPay...');
+    console.log('🔑 Secret Key (primeiros 20 chars):', SECRET_KEY.substring(0, 20));
+    console.log('📦 Payload:', JSON.stringify(payload));
+    
     const apiResponse = await fetch(`${SAFEPAY_API_URL}/v1/transactions`, {
       method: 'POST',
       headers,
@@ -65,6 +69,8 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
     });
 
     const rawText = await apiResponse.text();
+    console.log('📥 Resposta brute:', rawText);
+    
     let responseJson: any = {};
 
     try {
@@ -73,11 +79,12 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
       }
     } catch (parseError) {
       console.error('Failed to parse SafeFyPay response. Raw body:', rawText);
-      throw new Error(`Resposta inválida do gateway (Status ${apiResponse.status}).`);
+      throw new Error(`Resposta inválida do gateway (Status ${apiResponse.status}): ${rawText}`);
     }
 
     if (!apiResponse.ok || responseJson.error) {
-      throw new Error(responseJson.error?.message || responseJson.message || `Erro do Gateway: ${rawText}`);
+      console.error('SafeFyPay Error Response:', rawText);
+      throw new Error(responseJson.error?.message || responseJson.message || `Erro do Gateway (Status ${apiResponse.status}): ${rawText}`);
     }
 
     const data = responseJson.data;
@@ -113,7 +120,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
 
 export async function getPaymentStatus(paymentId: string): Promise<PixPaymentResponse> {
   const SAFEPAY_API_URL = 'https://api-payment.safefypay.com.br';
-  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_3f5bfb46f5eb9a0595d729da4042f3d6c709ee24a49da32a81eb08d3cb8c2221';
+  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || 'sk_production_e36cc2ffba6f8d9ec825eaaca0ad0227205ba26da5a03ab2981ef5527e53060a';
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
