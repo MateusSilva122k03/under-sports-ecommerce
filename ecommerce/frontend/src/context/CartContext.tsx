@@ -22,6 +22,8 @@ interface CartContextType {
   itemCount: number;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  showGame: boolean;
+  setShowGame: (show: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,6 +31,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [showGame, setShowGame] = useState(false);
+  const [hasPlayedGame, setHasPlayedGame] = useState(false);
 
   const addItem = (item: CartItem, giftItem?: CartItem) => {
     setItems(prev => {
@@ -75,7 +79,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       
       return newItems;
     });
-    setIsOpen(true);
+
+    // Trigger gamification on first relevant item
+    if (!hasPlayedGame && !item.isGift && !item.productId.startsWith('up-')) {
+      setTimeout(() => {
+        setShowGame(true);
+        setHasPlayedGame(true);
+      }, 600);
+    } else {
+      setIsOpen(true);
+    }
   };
 
   const removeItem = (id: string) => {
@@ -126,8 +139,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         itemCount,
         isOpen,
         setIsOpen,
+        showGame,
+        setShowGame
       }}
     >
+
       {children}
     </CartContext.Provider>
   );
