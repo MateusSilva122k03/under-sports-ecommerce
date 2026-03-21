@@ -42,7 +42,7 @@ const UPSELL_PRODUCTS = [
     name: 'Bola Adidas Copa do Mundo FIFA 26 Trionda Training',
     price: 124.95,
     oldPrice: 249.90,
-    image: 'https://m.media-amazon.com/images/G/32/apparel/rcxgs/tile._CB483369971_.gif',
+    image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSP3zbdWbkmyWorTWS5xSZAl9-LlZEpEVE1-L0GAidwchltGMLBJjpFDbKwTcZFbRTqGJJcji1-hTJgeREITnqo--S8G8z6',
     discount: '50% OFF'
   }
 ];
@@ -61,6 +61,7 @@ export default function MemoryGameUpsell() {
   const [matched, setMatched] = useState<string[]>([]);
   const [lastMatchedProduct, setLastMatchedProduct] = useState<any>(null);
   const [isWon, setIsWon] = useState(false);
+  const [claimedIds, setClaimedIds] = useState<string[]>([]);
 
   // Initialize game
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function MemoryGameUpsell() {
       setMatched([]);
       setIsWon(false);
       setLastMatchedProduct(null);
+      setClaimedIds([]);
     }
   }, [showGame]);
 
@@ -107,7 +109,7 @@ export default function MemoryGameUpsell() {
         });
 
         if (matched.length + 1 === UPSELL_PRODUCTS.length) {
-          setIsWon(true);
+          setTimeout(() => setIsWon(true), 1500);
         }
       } else {
         setTimeout(() => setFlipped([]), 1000);
@@ -125,8 +127,8 @@ export default function MemoryGameUpsell() {
       size: 'Único',
       quantity: 1,
     });
+    setClaimedIds(prev => [...prev, product.id]);
     setLastMatchedProduct(null);
-    if (isWon) setShowGame(false);
   };
 
   if (!showGame) return null;
@@ -270,17 +272,46 @@ export default function MemoryGameUpsell() {
 
         {/* Victory Message */}
         {isWon && !lastMatchedProduct && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-10 text-center bg-zinc-950/80 backdrop-blur-sm">
-             <Trophy className="text-yellow-500 mb-4 animate-pulse" size={80} />
-             <h2 className="text-4xl font-black italic text-white mb-2 uppercase tracking-tighter">Mestre da Copa!</h2>
-             <p className="text-zinc-400 mb-8 max-w-sm font-bold uppercase text-sm tracking-widest leading-relaxed">
-               Você encontrou todas as relíquias. Suas ofertas foram aplicadas e estão prontas para o checkout!
-             </p>
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-start p-6 lg:p-10 text-center bg-zinc-950 overflow-y-auto">
+             <Trophy className="text-yellow-500 mb-2 animate-bounce" size={60} />
+             <h2 className="text-3xl lg:text-4xl font-black italic text-white mb-1 uppercase tracking-tighter">Mestre da Copa!</h2>
+             <p className="text-zinc-400 mb-8 font-bold uppercase text-xs tracking-widest">Você desbloqueou todas as ofertas secretas!</p>
+             
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-4xl mb-10">
+               {UPSELL_PRODUCTS.map((product) => {
+                 const isClaimed = claimedIds.includes(product.id);
+                 return (
+                   <div key={product.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col items-center gap-3 relative overflow-hidden group">
+                     <div className="absolute top-2 left-2 bg-yellow-500 text-zinc-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                       {product.discount}
+                     </div>
+                     <img src={product.image} className="w-24 h-24 object-contain group-hover:scale-110 transition-transform" alt={product.name} referrerPolicy="no-referrer" />
+                     <h3 className="text-white text-[11px] font-bold leading-tight h-8 flex items-center">{product.name}</h3>
+                     <div className="flex flex-col items-center">
+                       <span className="text-zinc-500 text-[10px] line-through">R$ {product.oldPrice.toFixed(2).replace('.', ',')}</span>
+                       <span className="text-lg font-black text-white italic tracking-tighter">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                     </div>
+                     <button
+                       onClick={() => handleClaim(product)}
+                       disabled={isClaimed}
+                       className={`w-full py-2.5 rounded-xl font-black uppercase text-[10px] italic tracking-tighter flex items-center justify-center gap-2 transition-all ${
+                         isClaimed 
+                           ? 'bg-zinc-800 text-green-500 border border-green-500/30' 
+                           : 'bg-yellow-500 text-zinc-950 hover:bg-yellow-400 active:scale-95'
+                       }`}
+                     >
+                       {isClaimed ? <><CheckCircle2 size={14} /> Adicionado</> : 'Resgatar Oferta'}
+                     </button>
+                   </div>
+                 );
+               })}
+             </div>
+
              <button
                 onClick={() => setShowGame(false)}
-                className="bg-white text-zinc-950 px-10 py-4 rounded-2xl font-black uppercase italic tracking-tighter hover:bg-zinc-200 transition-all"
+                className="bg-white text-zinc-950 px-12 py-4 rounded-2xl font-black uppercase italic tracking-tighter hover:bg-zinc-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-10"
               >
-                Finalizar Compra
+                Ir para o Carrinho
               </button>
           </div>
         )}
