@@ -163,45 +163,42 @@ export default function MemoryGameUpsell() {
             {cards.map((card, index) => {
               const isFlipped = flipped.includes(index) || matched.includes(card.productId);
               return (
-                <div 
+                <motion.div 
                   key={index}
                   onClick={() => handleCardClick(index)}
-                  className="aspect-[3/4] cursor-pointer perspective-1000"
+                  initial={false}
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="aspect-[3/4] cursor-pointer relative"
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
-                  <motion.div 
-                    animate={{ rotateY: isFlipped ? 180 : 0 }}
-                    transition={{ duration: 0.4, type: "spring", stiffness: 260, damping: 20 }}
-                    className="relative w-full h-full transform-style-3d shadow-xl rounded-lg lg:rounded-xl overflow-hidden"
-                  >
-                    {/* Front (Hidden) */}
-                    <div 
-                      className="absolute inset-0 bg-zinc-900 border border-zinc-800 flex items-center justify-center"
-                      style={{ backfaceVisibility: 'hidden' }}
-                    >
-                      <div className="w-8 h-8 lg:w-12 lg:h-12 border-2 border-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500/30 font-black text-xl italic">
+                  {/* Front Side (Cover) */}
+                  {!isFlipped ? (
+                    <div className="absolute inset-0 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 lg:w-10 lg:h-10 border-2 border-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500/30 font-black italic">
                         US
                       </div>
                     </div>
-
-                    {/* Back (Image) */}
+                  ) : (
+                    /* Back Side (Image Revealed) */
                     <div 
-                      className="absolute inset-0 bg-white flex items-center justify-center p-1 lg:p-2"
-                      style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                      className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 lg:p-2 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
+                      style={{ transform: 'rotateY(180deg)' }}
                     >
                       <img 
                         src={card.image} 
-                        className="w-full h-full object-contain" 
-                        alt="Produto"
+                        className="w-full h-full object-contain pointer-events-none" 
+                        alt="Upsell"
                         referrerPolicy="no-referrer"
                       />
                       {matched.includes(card.productId) && (
-                        <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
                           <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
                         </div>
                       )}
                     </div>
-                  </motion.div>
-                </div>
+                  )}
+                </motion.div>
               );
             })}
           </div>
