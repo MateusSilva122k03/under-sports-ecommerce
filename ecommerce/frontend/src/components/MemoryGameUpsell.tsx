@@ -7,42 +7,42 @@ import { useCart } from '../context/CartContext';
 const UPSELL_PRODUCTS = [
   {
     id: 'up-album-prata',
-    name: 'Álbum Copa 2026 - Luxo Prata',
+    name: 'Álbum Copa 2026 Panini - Edição de Luxo Capa Dura Prata',
     price: 135.45,
     oldPrice: 270.90,
-    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg',
+    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcItHONvrFv39jxKhRFG8zPYWseVbb-PELO_ky1tMGiLJ99aawoM2yaRKi1spE6ZS2v-itGeMPBzDaruokgQ8nLb1c8-Yrbzw',
     discount: '50% OFF'
   },
   {
     id: 'up-album-ouro',
-    name: 'Álbum Copa 2026 - Luxo Ouro',
+    name: 'Álbum Copa 2026 Panini - Edição de Luxo Capa Dura Ouro',
     price: 179.94,
     oldPrice: 299.90,
-    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_2_20260115095620_4da26844e230.jpg',
+    image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT6RSnTBwVdV0OhvEYuOMDCwv4mCzXxjb4fJM3NspyPQTLwBXB5jP4tWnZ0MuoNh8B45Y-CRUEIaZ-CQHfX3T5RhLSH6FlX',
     discount: '40% OFF'
   },
   {
     id: 'up-album-luxo',
-    name: 'Álbum Copa 2026 - Especial Luxo',
+    name: 'Álbum Copa 2026 Panini - Edição de Luxo Capa Dura',
     price: 99.96,
     oldPrice: 249.90,
-    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
+    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR68I5EABtOsfKEUMGu7zzzy5KFSYMqX8FQ1N_cUZtKoFwnEG1lk7HiWVCdKshxPC8KYnlHhbznNqxRhLk9ABv50AUf5LN-',
     discount: '60% OFF'
   },
   {
     id: 'up-kit-torcedor',
-    name: 'Kit Torcedor Brasil 12 Peças',
+    name: 'Kit Torcedor Brasil 12 Peças - Ideal Para Copa 2026',
     price: 89.94,
     oldPrice: 149.90,
-    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
+    image: 'https://http2.mlstatic.com/D_NQ_NP_2X_669729-MLB108006690371_032026-F.webp',
     discount: '40% OFF'
   },
   {
     id: 'up-bola-adidas',
-    name: 'Bola Adidas Copa FIFA 26',
+    name: 'Bola Adidas Copa do Mundo FIFA 26 Trionda Training',
     price: 124.95,
     oldPrice: 249.90,
-    image: 'https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg',
+    image: 'https://m.media-amazon.com/images/G/32/apparel/rcxgs/tile._CB483369971_.gif',
     discount: '50% OFF'
   }
 ];
@@ -185,15 +185,15 @@ export default function MemoryGameUpsell() {
                   ) : (
                     /* Back Side (Image Revealed) */
                     <div 
-                      className="absolute inset-0 bg-white rounded-lg overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
-                      style={{ 
-                        transform: 'rotateY(180deg)',
-                        backgroundImage: `url(${card.image})`,
-                        backgroundSize: 'contain',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-referrer'
-                      } as any}
+                      className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 lg:p-2 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
+                      style={{ transform: 'rotateY(180deg)' }}
                     >
+                      <img 
+                        src={card.image} 
+                        className="w-full h-full object-contain pointer-events-none" 
+                        alt="Upsell"
+                        referrerPolicy="no-referrer"
+                      />
                       {matched.includes(card.productId) && (
                         <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
                           <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
