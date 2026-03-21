@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trophy, Gift, Zap, Timer, CheckCircle2 } from 'lucide-react';
+import { X, Trophy, Gift, Zap, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useCart } from '../context/CartContext';
 
@@ -63,7 +63,6 @@ export default function MemoryGameUpsell() {
   const [isWon, setIsWon] = useState(false);
   const [claimedIds, setClaimedIds] = useState<string[]>([]);
 
-  // Initialize game
   useEffect(() => {
     if (showGame) {
       const gameCards: Card[] = [...UPSELL_PRODUCTS, ...UPSELL_PRODUCTS]
@@ -95,22 +94,10 @@ export default function MemoryGameUpsell() {
         const productId = cards[first].productId;
         setMatched(prev => [...prev, productId]);
         setFlipped([]);
-        
-        // Find product info for reward display
         const product = UPSELL_PRODUCTS.find(p => p.id === productId);
         setLastMatchedProduct(product);
-        
-        // Dopamine hit
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#FFD700', '#FFFFFF', '#00FF00']
-        });
-
-        if (matched.length + 1 === UPSELL_PRODUCTS.length) {
-          setTimeout(() => setIsWon(true), 1500);
-        }
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 }, colors: ['#FFD700', '#FFFFFF', '#00FF00'] });
+        if (matched.length + 1 === UPSELL_PRODUCTS.length) setTimeout(() => setIsWon(true), 1500);
       } else {
         setTimeout(() => setFlipped([]), 1000);
       }
@@ -134,71 +121,56 @@ export default function MemoryGameUpsell() {
   if (!showGame) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowGame(false)} />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 text-white">
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setShowGame(false)} />
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="relative w-full max-w-4xl bg-zinc-950 border border-yellow-500/30 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(234,179,8,0.15)] flex flex-col lg:flex-row"
+        className="relative w-full h-full sm:h-auto sm:max-w-4xl max-h-screen sm:max-h-[90vh] bg-zinc-950 border-0 sm:border border-yellow-500/30 rounded-none sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row"
       >
-        {/* Close Button */}
         <button 
           onClick={() => setShowGame(false)}
-          className="absolute top-4 right-4 z-10 p-2 text-zinc-500 hover:text-white transition-colors"
+          className="absolute top-4 right-4 z-[60] p-2 bg-black/50 rounded-full text-zinc-400 hover:text-white"
         >
           <X size={24} />
         </button>
 
         {/* Game Area */}
-        <div className="flex-1 p-6 lg:p-10 flex flex-col items-center">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-black italic uppercase tracking-tighter text-white flex items-center justify-center gap-3">
-              <Zap className="text-yellow-400 fill-yellow-400" size={28} />
+        <div className="flex-1 p-4 sm:p-6 lg:p-10 flex flex-col items-center overflow-y-auto">
+          <div className="text-center mb-6 sm:mb-8 pt-8 sm:pt-0">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black italic uppercase tracking-tighter flex items-center justify-center gap-3">
+              <Zap className="text-yellow-400 fill-yellow-400" size={24} />
               Desafio da Copa
-              <Zap className="text-yellow-400 fill-yellow-400" size={28} />
+              <Zap className="text-yellow-400 fill-yellow-400" size={24} />
             </h2>
-            <p className="text-zinc-400 text-sm mt-1 uppercase tracking-widest font-bold">
-              Encontre os pares e desbloqueie relíquias com até 60% OFF
-            </p>
+            <p className="text-zinc-500 text-[10px] sm:text-xs mt-1 uppercase tracking-widest font-bold">Encontre os pares e ganhe descontos</p>
           </div>
 
-          <div className="grid grid-cols-5 gap-2 lg:gap-4 w-full max-w-2xl">
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-4 w-full max-w-2xl">
             {cards.map((card, index) => {
               const isFlipped = flipped.includes(index) || matched.includes(card.productId);
               return (
                 <motion.div 
                   key={index}
                   onClick={() => handleCardClick(index)}
-                  initial={false}
                   animate={{ rotateY: isFlipped ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
                   className="aspect-[3/4] cursor-pointer relative"
                   style={{ transformStyle: 'preserve-3d' }}
                 >
-                  {/* Front Side (Cover) */}
                   {!isFlipped ? (
                     <div className="absolute inset-0 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center overflow-hidden">
-                      <div className="w-8 h-8 lg:w-10 lg:h-10 border-2 border-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500/30 font-black italic">
-                        US
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent pointer-events-none" />
+                      <span className="text-yellow-500/30 font-black italic text-sm sm:text-base">US</span>
                     </div>
                   ) : (
-                    /* Back Side (Image Revealed) */
                     <div 
-                      className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 lg:p-2 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
+                      className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden"
                       style={{ transform: 'rotateY(180deg)' }}
                     >
-                      <img 
-                        src={card.image} 
-                        className="w-full h-full object-contain pointer-events-none" 
-                        alt="Upsell"
-                        referrerPolicy="no-referrer"
-                      />
+                      <img src={card.image} className="w-full h-full object-contain" alt="P" referrerPolicy="no-referrer" />
                       {matched.includes(card.productId) && (
-                        <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
-                          <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
+                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+                          <CheckCircle2 className="text-green-600" size={24} />
                         </div>
                       )}
                     </div>
@@ -208,121 +180,70 @@ export default function MemoryGameUpsell() {
             })}
           </div>
 
-          {/* Progress Bar */}
-          <div className="w-full max-w-md mt-8 h-2 bg-zinc-900 rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-yellow-500 shadow-[0_0_10px_#eab308]"
-              initial={{ width: 0 }}
-              animate={{ width: `${(matched.length / UPSELL_PRODUCTS.length) * 100}%` }}
-            />
+          <div className="w-full max-w-xs mt-8 h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+            <motion.div className="h-full bg-yellow-500" animate={{ width: `${(matched.length / UPSELL_PRODUCTS.length) * 100}%` }} />
           </div>
-          <p className="text-[10px] text-zinc-500 mt-2 uppercase font-bold tracking-widest">
-            {matched.length} de {UPSELL_PRODUCTS.length} Relíquias Desbloqueadas
-          </p>
         </div>
 
-        {/* Reward Sidebar / Overlay */}
+        {/* Reward Bottom Bar / Sidebar */}
         <AnimatePresence>
           {lastMatchedProduct && (
             <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              className="w-full lg:w-80 bg-zinc-900/50 border-l border-yellow-500/20 p-6 lg:p-8 flex flex-col items-center justify-center text-center gap-6"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              className="absolute inset-x-0 bottom-0 lg:relative lg:inset-auto lg:w-80 bg-zinc-900 border-t lg:border-t-0 lg:border-l border-yellow-500/30 p-6 z-50 shadow-2xl flex flex-col items-center text-center gap-4"
             >
-              <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center animate-bounce">
-                <Trophy className="text-yellow-500" size={40} />
-              </div>
-              
-              <div>
-                <span className="bg-yellow-500 text-zinc-950 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter mb-2 inline-block">
-                  {lastMatchedProduct.discount} DESBLOQUEADO
-                </span>
-                <h3 className="text-xl font-bold text-white leading-tight">{lastMatchedProduct.name}</h3>
-              </div>
-
-              <div className="relative group">
-                <img src={lastMatchedProduct.image} className="w-32 h-32 object-contain" alt="Reward" />
-                <div className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded italic transform rotate-12">
-                  OFERTA ÚNICA
+              <div className="flex flex-row lg:flex-col items-center gap-4">
+                <img src={lastMatchedProduct.image} className="w-20 h-20 lg:w-32 lg:h-32 object-contain" alt="R" />
+                <div className="text-left lg:text-center flex-1">
+                  <span className="bg-yellow-500 text-zinc-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase mb-1 inline-block">{lastMatchedProduct.discount} OFF</span>
+                  <h3 className="text-xs lg:text-base font-bold leading-tight mb-1">{lastMatchedProduct.name}</h3>
+                  <div className="flex items-baseline gap-2 lg:justify-center">
+                    <span className="text-zinc-500 text-[10px] line-through">R$ {lastMatchedProduct.oldPrice.toFixed(2)}</span>
+                    <span className="text-xl lg:text-2xl font-black text-yellow-400 italic">R$ {lastMatchedProduct.price.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex flex-col gap-1">
-                <span className="text-zinc-500 text-sm line-through">R$ {lastMatchedProduct.oldPrice.toFixed(2).replace('.', ',')}</span>
-                <span className="text-3xl font-black text-white italic tracking-tighter">R$ {lastMatchedProduct.price.toFixed(2).replace('.', ',')}</span>
+              <div className="w-full flex gap-2">
+                <button onClick={() => handleClaim(lastMatchedProduct)} className="flex-1 bg-yellow-500 text-zinc-950 font-black py-3 rounded-xl uppercase italic text-xs">Resgatar Oferta</button>
+                <button onClick={() => setLastMatchedProduct(null)} className="lg:hidden p-3 bg-zinc-800 text-zinc-400 rounded-xl"><X size={20} /></button>
               </div>
-
-              <button
-                onClick={() => handleClaim(lastMatchedProduct)}
-                className="w-full bg-yellow-500 hover:bg-yellow-400 text-zinc-950 font-black py-4 rounded-2xl uppercase italic tracking-tighter flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(234,179,8,0.3)] active:scale-95 transition-all"
-              >
-                Resgatar Agora <Gift size={20} />
-              </button>
-
-              <button 
-                onClick={() => setLastMatchedProduct(null)}
-                className="text-zinc-500 text-xs font-bold uppercase hover:text-zinc-300 transition-colors"
-              >
-                Continuar Jogando
-              </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Victory Message */}
+        {/* Victory Screen */}
         {isWon && !lastMatchedProduct && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-start p-6 lg:p-10 text-center bg-zinc-950 overflow-y-auto">
-             <Trophy className="text-yellow-500 mb-2 animate-bounce" size={60} />
-             <h2 className="text-3xl lg:text-4xl font-black italic text-white mb-1 uppercase tracking-tighter">Mestre da Copa!</h2>
-             <p className="text-zinc-400 mb-8 font-bold uppercase text-xs tracking-widest">Você desbloqueou todas as ofertas secretas!</p>
-             
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-4xl mb-10">
-               {UPSELL_PRODUCTS.map((product) => {
-                 const isClaimed = claimedIds.includes(product.id);
+          <div className="absolute inset-0 z-[70] flex flex-col items-center justify-start p-6 lg:p-10 text-center bg-zinc-950 overflow-y-auto pt-16">
+             <Trophy className="text-yellow-500 mb-2 animate-bounce" size={48} />
+             <h2 className="text-2xl sm:text-4xl font-black italic text-white mb-1 uppercase tracking-tighter">Mestre da Copa!</h2>
+             <p className="text-zinc-500 mb-6 font-bold uppercase text-[10px] tracking-widest">Resgate suas ofertas exclusivas agora!</p>
+             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-4xl mb-24">
+               {UPSELL_PRODUCTS.map((p) => {
+                 const isClaimed = claimedIds.includes(p.id);
                  return (
-                   <div key={product.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col items-center gap-3 relative overflow-hidden group">
-                     <div className="absolute top-2 left-2 bg-yellow-500 text-zinc-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
-                       {product.discount}
-                     </div>
-                     <img src={product.image} className="w-24 h-24 object-contain group-hover:scale-110 transition-transform" alt={product.name} referrerPolicy="no-referrer" />
-                     <h3 className="text-white text-[11px] font-bold leading-tight h-8 flex items-center">{product.name}</h3>
+                   <div key={p.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex flex-col items-center gap-2 relative">
+                     <div className="absolute top-1 left-1 bg-yellow-500 text-zinc-950 text-[7px] font-black px-1.5 py-0.5 rounded-full">{p.discount}</div>
+                     <img src={p.image} className="w-16 h-16 object-contain" alt="P" referrerPolicy="no-referrer" />
+                     <h3 className="text-[9px] font-bold leading-tight h-6 line-clamp-2">{p.name}</h3>
                      <div className="flex flex-col items-center">
-                       <span className="text-zinc-500 text-[10px] line-through">R$ {product.oldPrice.toFixed(2).replace('.', ',')}</span>
-                       <span className="text-lg font-black text-white italic tracking-tighter">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                       <span className="text-zinc-500 text-[8px] line-through">R$ {p.oldPrice.toFixed(2)}</span>
+                       <span className="text-sm font-black text-yellow-400 italic">R$ {p.price.toFixed(2)}</span>
                      </div>
-                     <button
-                       onClick={() => handleClaim(product)}
-                       disabled={isClaimed}
-                       className={`w-full py-2.5 rounded-xl font-black uppercase text-[10px] italic tracking-tighter flex items-center justify-center gap-2 transition-all ${
-                         isClaimed 
-                           ? 'bg-zinc-800 text-green-500 border border-green-500/30' 
-                           : 'bg-yellow-500 text-zinc-950 hover:bg-yellow-400 active:scale-95'
-                       }`}
-                     >
-                       {isClaimed ? <><CheckCircle2 size={14} /> Adicionado</> : 'Resgatar Oferta'}
+                     <button onClick={() => handleClaim(p)} disabled={isClaimed} className={`w-full py-2 rounded-lg font-black uppercase text-[9px] italic ${isClaimed ? 'bg-zinc-800 text-green-500' : 'bg-yellow-500 text-zinc-950'}`}>
+                       {isClaimed ? 'Adicionado' : 'Resgatar'}
                      </button>
                    </div>
                  );
                })}
              </div>
-
-             <button
-                onClick={() => setShowGame(false)}
-                className="bg-white text-zinc-950 px-12 py-4 rounded-2xl font-black uppercase italic tracking-tighter hover:bg-zinc-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-10"
-              >
-                Ir para o Carrinho
-              </button>
+             <div className="fixed bottom-0 inset-x-0 p-4 bg-zinc-950 z-[80] flex justify-center">
+               <button onClick={() => setShowGame(false)} className="bg-white text-zinc-950 w-full max-w-sm py-4 rounded-2xl font-black uppercase italic tracking-tighter">Ir para o Carrinho</button>
+             </div>
           </div>
         )}
       </motion.div>
-      
-      <style>{`
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-      `}</style>
     </div>
   );
 }

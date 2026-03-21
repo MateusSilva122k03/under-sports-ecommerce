@@ -341,24 +341,24 @@ export default function ProductDetail() {
               <span className="font-semibold text-sm uppercase tracking-wide block mb-1">Promoções</span>
               
               {/* Promoção 1: Compre 1 Leve 2 */}
-              <div className={`border-2 rounded-xl p-4 transition-colors ${
-                activePromo === '1_FOR_2' ? 'border-yellow-500/50 bg-yellow-500/5' : 'border-zinc-800 bg-zinc-900/30'
+              <div className={`border-2 rounded-xl p-4 transition-all duration-300 ${
+                activePromo === '1_FOR_2' ? 'border-yellow-400 bg-yellow-400/5 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-lime-500/80 bg-lime-500/5 hover:border-lime-400'
               }`}>
                 <button
                   onClick={() => togglePromo('1_FOR_2')}
                   className="w-full flex items-center justify-between p-1"
                 >
                   <div className="flex items-center gap-3 text-left">
-                    <Gift size={24} className={activePromo === '1_FOR_2' ? 'text-yellow-500' : 'text-zinc-600'} />
+                    <Gift size={24} className={activePromo === '1_FOR_2' ? 'text-yellow-400' : 'text-lime-500'} />
                     <div>
-                      <span className={`font-bold block ${activePromo === '1_FOR_2' ? 'text-white' : 'text-zinc-400'}`}>Compre 1 Leve 2 GRÁTIS</span>
+                      <span className={`font-bold block ${activePromo === '1_FOR_2' ? 'text-white' : 'text-lime-500'}`}>Compre 1 Leve 2 GRÁTIS</span>
                       <span className="text-xs text-zinc-500">Selecione 1 brinde ao ativar</span>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    activePromo === '1_FOR_2' ? 'border-yellow-500 bg-yellow-500/20' : 'border-zinc-600'
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    activePromo === '1_FOR_2' ? 'border-yellow-400 bg-yellow-400/20' : 'border-lime-500/50'
                   }`}>
-                    {activePromo === '1_FOR_2' && <Check size={14} className="text-yellow-500" />}
+                    {activePromo === '1_FOR_2' && <Check size={14} className="text-yellow-400" />}
                   </div>
                 </button>
 
@@ -373,19 +373,19 @@ export default function ProductDetail() {
                             placeholder="Buscar brinde..."
                             value={giftSearch}
                             onChange={(e) => setGiftSearch(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg py-2 pl-10 pr-4 text-white text-sm"
+                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg py-2 pl-10 pr-4 text-white text-sm focus:border-yellow-400 outline-none"
                           />
                         </div>
-                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                           {availableGifts.map((gift) => (
                             <button
                               key={gift.id}
                               onClick={() => setSelectedGift(gift)}
-                              className="flex items-center gap-2 p-2 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-600 text-left"
+                              className="flex items-center gap-2 p-2 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-lime-500/50 text-left transition-colors"
                             >
                               <img src={gift.image} className="w-10 h-10 object-cover rounded" />
                               <div className="min-w-0">
-                                <span className="text-xs text-zinc-300 line-clamp-2">{gift.name}</span>
+                                <span className="text-[10px] text-zinc-300 line-clamp-2 leading-tight">{gift.name}</span>
                               </div>
                             </button>
                           ))}
@@ -393,12 +393,12 @@ export default function ProductDetail() {
                       </>
                     ) : (
                       <>
-                        <div className="flex items-center justify-between p-2 bg-zinc-900 border border-zinc-800 rounded-lg">
+                        <div className="flex items-center justify-between p-2 bg-zinc-900 border border-yellow-400/30 rounded-lg animate-in fade-in zoom-in duration-300">
                           <div className="flex items-center gap-3">
                             <img src={selectedGift.image} className="w-10 h-10 object-cover rounded" />
                             <span className="text-sm text-zinc-300 line-clamp-1">{selectedGift.name}</span>
                           </div>
-                          <button onClick={() => { setSelectedGift(null); setSelectedGiftSize(''); }} className="p-2 text-zinc-500">
+                          <button onClick={() => { setSelectedGift(null); setSelectedGiftSize(''); }} className="p-2 text-zinc-500 hover:text-white transition-colors">
                             <X size={16} />
                           </button>
                         </div>
@@ -409,8 +409,8 @@ export default function ProductDetail() {
                               <button
                                 key={size.label}
                                 onClick={() => setSelectedGiftSize(size.label)}
-                                className={`w-10 h-10 border-2 font-bold text-sm rounded-lg ${
-                                  selectedGiftSize === size.label ? 'border-yellow-500 text-yellow-500' : 'border-zinc-800 text-zinc-400 hover:border-zinc-600'
+                                className={`w-10 h-10 border-2 font-bold text-sm rounded-lg transition-all ${
+                                  selectedGiftSize === size.label ? 'border-yellow-400 text-yellow-400 scale-105' : 'border-zinc-800 text-zinc-400 hover:border-zinc-600'
                                 }`}
                               >
                                 {size.label}
@@ -425,41 +425,41 @@ export default function ProductDetail() {
               </div>
 
               {/* Promoção 2: Compre 2 Leve 4 */}
-              <div className={`border-2 rounded-xl p-4 transition-colors ${
-                activePromo === '2_FOR_4' ? 'border-blue-500/50 bg-blue-500/5' : 'border-zinc-800 bg-zinc-900/30'
+              <div className={`border-2 rounded-xl p-4 transition-all duration-300 ${
+                activePromo === '2_FOR_4' ? 'border-yellow-400 bg-yellow-400/5 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-lime-500/80 bg-lime-500/5 hover:border-lime-400'
               }`}>
                 <button
                   onClick={() => togglePromo('2_FOR_4')}
                   className="w-full flex items-center justify-between p-1"
                 >
                   <div className="flex items-center gap-3 text-left">
-                    <Gift size={24} className={activePromo === '2_FOR_4' ? 'text-blue-500' : 'text-zinc-600'} />
+                    <Gift size={24} className={activePromo === '2_FOR_4' ? 'text-yellow-400' : 'text-lime-500'} />
                     <div>
-                      <span className={`font-bold block ${activePromo === '2_FOR_4' ? 'text-white' : 'text-zinc-400'}`}>Compre 2 Leve 4 GRÁTIS</span>
+                      <span className={`font-bold block ${activePromo === '2_FOR_4' ? 'text-white' : 'text-lime-500'}`}>Compre 2 Leve 4 GRÁTIS</span>
                       <span className="text-xs text-zinc-500">Selecione 2 brindes ao ativar</span>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    activePromo === '2_FOR_4' ? 'border-blue-500 bg-blue-500/20' : 'border-zinc-600'
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    activePromo === '2_FOR_4' ? 'border-yellow-400 bg-yellow-400/20' : 'border-lime-500/50'
                   }`}>
-                    {activePromo === '2_FOR_4' && <Check size={14} className="text-blue-500" />}
+                    {activePromo === '2_FOR_4' && <Check size={14} className="text-yellow-400" />}
                   </div>
                 </button>
 
                 {activePromo === '2_FOR_4' && (
                   <div className="mt-4 pt-4 border-t border-zinc-800/50 space-y-4">
-                    
+
                     {/* Lista dos selecionados (até 2) */}
                     {selectedGiftsPromo2.map((g, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-2 bg-zinc-900 border border-zinc-800 rounded-lg">
+                      <div key={idx} className="flex items-center justify-between p-2 bg-zinc-900 border border-yellow-400/20 rounded-lg animate-in slide-in-from-right duration-300">
                         <div className="flex items-center gap-3">
                           <img src={g.product.image} className="w-10 h-10 object-cover rounded" />
                           <div className="flex flex-col">
-                            <span className="text-sm text-zinc-300 line-clamp-1">{g.product.name}</span>
-                            <span className="text-xs text-blue-400 font-bold">Tam: {g.size}</span>
+                            <span className="text-[10px] text-zinc-300 line-clamp-1">{g.product.name}</span>
+                            <span className="text-[10px] text-yellow-400 font-bold uppercase tracking-tighter">Brinde Selecionado • Tam: {g.size}</span>
                           </div>
                         </div>
-                        <button onClick={() => removeGiftFromPromo2(idx)} className="p-2 text-zinc-500">
+                        <button onClick={() => removeGiftFromPromo2(idx)} className="p-2 text-zinc-500 hover:text-white transition-colors">
                           <X size={16} />
                         </button>
                       </div>
@@ -467,7 +467,7 @@ export default function ProductDetail() {
 
                     {/* Alerta caso falte escolher */}
                     {selectedGiftsPromo2.length < 2 && (
-                       <p className="text-xs text-zinc-400">
+                       <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest text-center animate-pulse">
                          Falta escolher {2 - selectedGiftsPromo2.length} brinde(s).
                        </p>
                     )}
@@ -482,22 +482,22 @@ export default function ProductDetail() {
                             placeholder="Buscar mais brindes..."
                             value={giftSearch2}
                             onChange={(e) => setGiftSearch2(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg py-2 pl-10 pr-4 text-white text-sm"
+                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg py-2 pl-10 pr-4 text-white text-sm focus:border-yellow-400 outline-none"
                           />
                         </div>
-                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                           {availableGiftsPromo2.map((gift) => (
-                            <div key={gift.id} className="flex flex-col gap-2 p-2 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-600">
+                            <div key={gift.id} className="flex flex-col gap-2 p-2 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-lime-500/50 transition-colors">
                               <div className="flex gap-2">
                                 <img src={gift.image} className="w-10 h-10 object-cover rounded shrink-0" />
-                                <span className="text-xs text-zinc-300 line-clamp-2">{gift.name}</span>
+                                <span className="text-[10px] text-zinc-300 line-clamp-2 leading-tight">{gift.name}</span>
                               </div>
                               <div className="flex gap-1 overflow-x-auto hide-scrollbar">
                                 {SIZES.map(s => (
                                   <button
                                     key={s.label}
                                     onClick={() => addGiftToPromo2(gift, s.label)}
-                                    className="px-2 py-1 text-[10px] font-bold border border-zinc-700 rounded bg-zinc-800 hover:bg-zinc-700 shrink-0"
+                                    className="px-2 py-1 text-[10px] font-bold border border-zinc-700 rounded bg-zinc-800 hover:bg-lime-500 hover:text-black transition-colors shrink-0"
                                   >
                                     {s.label}
                                   </button>
@@ -511,6 +511,7 @@ export default function ProductDetail() {
                   </div>
                 )}
               </div>
+
             </div>
 
             {/* Add to cart — desktop */}
