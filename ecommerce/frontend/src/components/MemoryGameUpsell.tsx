@@ -174,7 +174,10 @@ export default function MemoryGameUpsell() {
                     className="relative w-full h-full transform-style-3d shadow-xl rounded-lg lg:rounded-xl overflow-hidden"
                   >
                     {/* Front (Hidden) */}
-                    <div className="absolute inset-0 bg-zinc-900 border border-zinc-800 flex items-center justify-center backface-hidden">
+                    <div 
+                      className="absolute inset-0 bg-zinc-900 border border-zinc-800 flex items-center justify-center"
+                      style={{ backfaceVisibility: 'hidden' }}
+                    >
                       <div className="w-8 h-8 lg:w-12 lg:h-12 border-2 border-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500/30 font-black text-xl italic">
                         US
                       </div>
@@ -182,16 +185,18 @@ export default function MemoryGameUpsell() {
 
                     {/* Back (Image) */}
                     <div 
-                      className="absolute inset-0 bg-white rotate-y-180 backface-hidden flex items-center justify-center p-1 lg:p-2"
+                      className="absolute inset-0 bg-white flex items-center justify-center p-1 lg:p-2"
+                      style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                     >
                       <img 
                         src={card.image} 
-                        className="w-full h-full object-contain pointer-events-none" 
-                        alt="Produto Revelado" 
+                        className="w-full h-full object-contain" 
+                        alt="Produto"
+                        referrerPolicy="no-referrer"
                       />
                       {matched.includes(card.productId) && (
-                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
-                          <CheckCircle2 className="text-green-500 drop-shadow-lg" size={32} />
+                        <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
+                          <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
                         </div>
                       )}
                     </div>
