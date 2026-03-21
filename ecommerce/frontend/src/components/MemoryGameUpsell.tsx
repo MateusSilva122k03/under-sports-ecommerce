@@ -184,10 +184,14 @@ export default function MemoryGameUpsell() {
                     <div 
                       className="absolute inset-0 bg-white rotate-y-180 backface-hidden flex items-center justify-center p-1 lg:p-2"
                     >
-                      <img src={card.image} className="w-full h-full object-contain" alt="Card" />
+                      <img 
+                        src={card.image} 
+                        className="w-full h-full object-contain pointer-events-none" 
+                        alt="Produto Revelado" 
+                      />
                       {matched.includes(card.productId) && (
                         <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
-                          <CheckCircle2 className="text-green-500" size={32} />
+                          <CheckCircle2 className="text-green-500 drop-shadow-lg" size={32} />
                         </div>
                       )}
                     </div>
