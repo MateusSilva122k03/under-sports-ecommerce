@@ -58,6 +58,7 @@ export const categories: Category[] = [
         image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg'),
         images: [
           'https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg',
+          'https://acdn-us.mitiendanube.com/stores/002/042/833/products/camisa-brasil-2026-amarela-versao-jogador-nike-copa-do-mundo-2026-2-7866b314333c78209b17694683265547-1024-1024.webp',
           'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_2_20260115095620_4da26844e230.jpg',
           'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg'
         ],
@@ -116,10 +117,9 @@ export const categories: Category[] = [
         image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg'),
         images: [
           'https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg',
-          'https://img.olx.com.br/images/46/462647501532446.jpg',
-          'https://tokstilo.com/wp-content/uploads/2024/03/Camisa-Brasil-Selecao-Brasileira-Away-Azul-Jogador-Copa-do-Mundo-2026-Jordan-Nike-1.jpg',
-          'https://tokstilo.com/wp-content/uploads/2024/03/Camisa-Brasil-Selecao-Brasileira-Away-Azul-Jogador-Copa-do-Mundo-2026-Jordan-Nike-2.jpg',
-          'https://tokstilo.com/wp-content/uploads/2024/03/Camisa-Brasil-Selecao-Brasileira-Away-Azul-Jogador-Copa-do-Mundo-2026-Jordan-Nike-4.jpg'
+          'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
+          'https://acdn-us.mitiendanube.com/stores/003/398/868/products/img_7048-461fc87952ddd4253017733695235942-1024-1024.webp',
+          'https://img.olx.com.br/images/52/527666496619939.jpg'
         ],
         category: 'copa_mundo_2026', 
         subcategory: '' 
