@@ -7,26 +7,26 @@ import { useCart } from '../context/CartContext';
 const UPSELL_PRODUCTS = [
   {
     id: 'up-album-prata',
-    name: 'Álbum Copa 2026 - Edição Luxo Prata',
+    name: 'Álbum Copa 2026 - Luxo Prata',
     price: 135.45,
     oldPrice: 270.90,
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcItHONvrFv39jxKhRFG8zPYWseVbb-PELO_ky1tMGiLJ99aawoM2yaRKi1spE6ZS2v-itGeMPBzDaruokgQ8nLb1c8-Yrbzw',
+    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg', // Usando link estável do seu site como placeholder de alta qualidade
     discount: '50% OFF'
   },
   {
     id: 'up-album-ouro',
-    name: 'Álbum Copa 2026 - Edição Luxo Ouro',
+    name: 'Álbum Copa 2026 - Luxo Ouro',
     price: 179.94,
     oldPrice: 299.90,
-    image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT6RSnTBwVdV0OhvEYuOMDCwv4mCzXxjb4fJM3NspyPQTLwBXB5jP4tWnZ0MuoNh8B45Y-CRUEIaZ-CQHfX3T5RhLSH6FlX',
+    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_2_20260115095620_4da26844e230.jpg',
     discount: '40% OFF'
   },
   {
     id: 'up-album-luxo',
-    name: 'Álbum Copa 2026 - Edição Especial Luxo',
+    name: 'Álbum Copa 2026 - Especial Luxo',
     price: 99.96,
     oldPrice: 249.90,
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR68I5EABtOsfKEUMGu7zzzy5KFSYMqX8FQ1N_cUZtKoFwnEG1lk7HiWVCdKshxPC8KYnlHhbznNqxRhLk9ABv50AUf5LN-',
+    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
     discount: '60% OFF'
   },
   {
@@ -34,15 +34,15 @@ const UPSELL_PRODUCTS = [
     name: 'Kit Torcedor Brasil 12 Peças',
     price: 89.94,
     oldPrice: 149.90,
-    image: 'https://http2.mlstatic.com/D_NQ_NP_2X_669729-MLB108006690371_032026-F.webp',
+    image: 'https://img.olx.com.br/images/52/527666496619939.jpg',
     discount: '40% OFF'
   },
   {
     id: 'up-bola-adidas',
-    name: 'Bola Adidas Copa FIFA 26 Trionda',
+    name: 'Bola Adidas Copa FIFA 26',
     price: 124.95,
     oldPrice: 249.90,
-    image: 'https://m.media-amazon.com/images/G/32/apparel/rcxgs/tile._CB483369971_.gif',
+    image: 'https://acdn-us.mitiendanube.com/stores/003/398/868/products/img_7048-461fc87952ddd4253017733695235942-1024-1024.webp',
     discount: '50% OFF'
   }
 ];
@@ -51,6 +51,7 @@ interface Card {
   instanceId: number;
   productId: string;
   image: string;
+  name: string;
 }
 
 export default function MemoryGameUpsell() {
@@ -60,6 +61,7 @@ export default function MemoryGameUpsell() {
   const [matched, setMatched] = useState<string[]>([]);
   const [lastMatchedProduct, setLastMatchedProduct] = useState<any>(null);
   const [isWon, setIsWon] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   // Initialize game
   useEffect(() => {
@@ -69,13 +71,15 @@ export default function MemoryGameUpsell() {
         .map((p, index) => ({
           instanceId: index,
           productId: p.id,
-          image: p.image
+          image: p.image,
+          name: p.name
         }));
       setCards(gameCards);
       setFlipped([]);
       setMatched([]);
       setIsWon(false);
       setLastMatchedProduct(null);
+      setImageErrors({});
     }
   }, [showGame]);
 
@@ -180,23 +184,35 @@ export default function MemoryGameUpsell() {
                       </div>
                     </div>
                   ) : (
-                    /* Back Side (Image Revealed) */
+                    {/* Back Side (Image Revealed) */}
                     <div 
                       className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 lg:p-2 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
                       style={{ transform: 'rotateY(180deg)' }}
                     >
-                      <img 
-                        src={card.image} 
-                        className="w-full h-full object-contain pointer-events-none" 
-                        alt="Upsell"
-                        referrerPolicy="no-referrer"
-                      />
+                      {!imageErrors[index] ? (
+                        <img 
+                          src={card.image} 
+                          className="w-full h-full object-contain pointer-events-none" 
+                          alt="Upsell"
+                          referrerPolicy="no-referrer"
+                          onError={() => setImageErrors(prev => ({ ...prev, [index]: true }))}
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-center p-2 bg-yellow-500/10 h-full w-full">
+                          <Zap className="text-yellow-600 mb-1" size={16} />
+                          <span className="text-[8px] font-black uppercase text-yellow-800 leading-tight">
+                            {card.name.split(' ')[0]} <br/> {card.name.split(' ').slice(1).join(' ')}
+                          </span>
+                        </div>
+                      )}
+
                       {matched.includes(card.productId) && (
                         <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
                           <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
                         </div>
                       )}
                     </div>
+
                   )}
                 </motion.div>
               );
