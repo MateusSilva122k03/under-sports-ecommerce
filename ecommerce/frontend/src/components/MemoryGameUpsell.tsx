@@ -10,7 +10,7 @@ const UPSELL_PRODUCTS = [
     name: 'Álbum Copa 2026 Panini - Edição de Luxo Capa Dura Prata',
     price: 135.45,
     oldPrice: 270.90,
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcItHONvrFv39jxKhRFG8zPYWseVbb-PELO_ky1tMGiLJ99aawoM2yaRKi1spE6ZS2v-itGeMPBzDaruokgQ8nLb1c8-Yrbzw',
+    image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSP3zbdWbkmyWorTWS5xSZAl9-LlZEpEVE1-L0GAidwchltGMLBJjpFDbKwTcZFbRTqGJJcji1-hTJgeREITnqo--S8G8z6',
     discount: '50% OFF'
   },
   {
