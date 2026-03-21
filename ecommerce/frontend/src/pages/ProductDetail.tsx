@@ -46,12 +46,12 @@ export default function ProductDetail() {
   const [selectedGiftsPromo2, setSelectedGiftsPromo2] = useState<Array<{product: Product, size: string}>>([]);
   const [giftSearch2, setGiftSearch2] = useState('');
 
-  // Filtrar produtos para brinde (excluir o produto atual)
-  const availableGifts = allProducts.filter(p => p.id !== id).filter(p => 
+  // Filtrar produtos para brinde (excluir o produto atual e produtos de coleção/premium)
+  const availableGifts = allProducts.filter(p => p.id !== id && p.id !== 'ronaldinho-2006-premium').filter(p => 
     giftSearch === '' || p.name.toLowerCase().includes(giftSearch.toLowerCase())
   ).slice(0, 20);
 
-  const availableGiftsPromo2 = allProducts.filter(p => p.id !== id).filter(p => 
+  const availableGiftsPromo2 = allProducts.filter(p => p.id !== id && p.id !== 'ronaldinho-2006-premium').filter(p => 
     giftSearch2 === '' || p.name.toLowerCase().includes(giftSearch2.toLowerCase())
   ).slice(0, 20);
 
@@ -70,6 +70,8 @@ export default function ProductDetail() {
     const found = cat.products.find(p => p.id === id);
     if (found) { product = found; break; }
   }
+
+  const isPremiumProduct = product?.id === 'ronaldinho-2006-premium';
 
   if (!product) {
     return (
