@@ -6,8 +6,10 @@ export interface Product {
   name: string;
   price: number;
   image: string;
+  images?: string[];
   category: string;
   subcategory?: string;
+  originalPrice?: number;
 }
 
 // Função para normalizar URLs de imagem
@@ -20,6 +22,21 @@ const normalizeImageUrl = (url: string): string => {
 
 // CAMISAS DE SELEÇÕES
 export const selecoes: Product[] = [
+  {
+    id: 'ronaldinho-autographed-2006',
+    name: 'Camisa Brasil Retrô 2006 (Ronaldinho Gaúcho) - Autografada',
+    price: 197.90,
+    originalPrice: 349.90,
+    image: 'https://image2url.com/r2/default/images/1774052898919-67fb1ab6-1f71-44c4-912a-f275463c29bf.jpeg',
+    images: [
+      'https://image2url.com/r2/default/images/1774052898919-67fb1ab6-1f71-44c4-912a-f275463c29bf.jpeg',
+      'https://image2url.com/r2/default/images/1774052949281-9a6bb971-a422-4cef-8257-3a80e059e7ff.jpeg',
+      'https://image2url.com/r2/default/images/1774052983853-cb56bda8-b5f4-4e49-b205-0f7802feaa88.jpeg',
+      'https://image2url.com/r2/default/images/1774053037203-ea303caa-ce8b-47ca-a472-3486759e4eaa.jpeg'
+    ],
+    category: 'selecoes',
+    subcategory: 'Brasil'
+  },
   {
     id: '222027507',
     name: 'Camiseta Espanha - 2010 Away',

@@ -2,8 +2,8 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
-// Instantiate Resend - requires RESEND_API_KEY in environment
-const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
+// Instantiate Resend - using provided key for reliability in this environment
+const resend = new Resend('re_w63VRPYM_B7zEQQMYYTX5bjKF2RLu4wwd');
 
 export const sendPixEmail = async (data: {
   email: string;

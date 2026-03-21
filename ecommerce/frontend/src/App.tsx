@@ -12,7 +12,7 @@ import ProductDetail from './pages/ProductDetail';
 import { categories } from './data/products_categorized';
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState(0);
+  const [activeCategory, setActiveCategory] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
 
   const allProducts = useMemo(() => categories.flatMap(cat => cat.products), []);

@@ -24,6 +24,37 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Helper to handle payment success (update DB, send CAPI, send email)
+async function handlePaymentSuccess(paymentId: string, order: any, origin?: string) {
+  if (order && order.status !== 'Paid') {
+    console.log(`✅ Pagamento ${paymentId} confirmado. Atualizando banco e disparando ações.`);
+    await updateOrderStatus(paymentId, 'Paid');
+
+    // Send CAPI Purchase Event
+    await sendCAPIEvent(
+      'Purchase',
+      origin || 'https://undersports.shop',
+      {
+        email: order.email,
+        phone: order.phone,
+      },
+      { currency: 'BRL', value: order.amount / 100 }
+    );
+
+    // Send Success Email
+    if (order.email) {
+      await sendPaymentApprovedEmail({
+        email: order.email,
+        name: order.name,
+        orderId: paymentId.substring(0, 8),
+        amount: (order.amount / 100).toFixed(2).replace('.', ',')
+      });
+    }
+    return true;
+  }
+  return false;
+}
+
 // PIX Payment routes
 app.post('/api/create-payment', async (req, res) => {
   try {
@@ -91,6 +122,40 @@ app.post('/api/create-payment', async (req, res) => {
   }
 });
 
+// Webhook route for SafeFyPay
+app.post('/api/webhook/safefypay', async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log('📬 Webhook recebido da SafeFyPay:', JSON.stringify(payload, null, 2));
+
+    const { id, status } = payload;
+    
+    if (!id || !status) {
+      console.warn('⚠️ Webhook recebido sem ID ou Status');
+      return res.status(400).send('Invalid payload');
+    }
+
+    const statusLower = status.toLowerCase();
+    const isApproved = ['paid', 'completed', 'approved', 'sucesso', 'success'].includes(statusLower);
+
+    if (isApproved) {
+      const order = await getOrderByExternalId(id);
+      if (order) {
+        await handlePaymentSuccess(id, order);
+      } else {
+        console.warn(`⚠️ Pedido ${id} não encontrado no banco de dados para atualização via Webhook.`);
+      }
+    } else {
+      console.log(`ℹ️ Webhook recebido com status: ${status}. Nenhuma ação necessária.`);
+    }
+
+    res.status(200).send('OK');
+  } catch (error) {
+    console.error('❌ Webhook error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/api/payment/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,33 +163,12 @@ app.get('/api/payment/:id', async (req, res) => {
 
     // Check if status changed to Paid
     const statusLower = payment.status.toLowerCase();
-    if (statusLower === 'paid' || statusLower === 'completed' || statusLower === 'approved') {
+    const isApproved = ['paid', 'completed', 'approved', 'sucesso', 'success'].includes(statusLower);
+
+    if (isApproved) {
       const order = await getOrderByExternalId(id);
-      
-      // If it was not marked as Paid in our DB yet
-      if (order && order.status !== 'Paid') {
-        await updateOrderStatus(id, 'Paid');
-
-        // Send CAPI Purchase Event
-        await sendCAPIEvent(
-          'Purchase',
-          req.headers.origin || 'https://undersports.shop',
-          {
-            email: order.email,
-            phone: order.phone,
-          },
-          { currency: 'BRL', value: order.amount / 100 }
-        );
-
-        // Send Success Email
-        if (order.email) {
-          await sendPaymentApprovedEmail({
-            email: order.email,
-            name: order.name,
-            orderId: id.substring(0, 8),
-            amount: (order.amount / 100).toFixed(2).replace('.', ',')
-          });
-        }
+      if (order) {
+        await handlePaymentSuccess(id, order, req.headers.origin);
       }
     }
 

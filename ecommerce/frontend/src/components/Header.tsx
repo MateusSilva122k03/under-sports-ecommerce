@@ -160,22 +160,16 @@ export default function Header({ activeCategory, onCategoryChange, onSearch }: H
 
         {/* Category nav — desktop */}
         <nav className="hidden lg:flex items-center gap-0.5 pb-3">
-          <button
-            onClick={() => { onCategoryChange(0); if (onSearch) onSearch(''); setSearchQuery(''); }}
-            className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-widest transition-all rounded-md ${
-              activeCategory === 0
-                ? 'bg-white text-zinc-950'
-                : 'text-zinc-500 hover:text-white hover:bg-zinc-800/70'
-            }`}
-          >
-            Todos
-          </button>
-          {categories.slice(1).map((cat, index) => (
+          {categories.map((cat, index) => (
             <button
               key={cat.key}
-              onClick={() => { onCategoryChange(index + 1); if (onSearch) onSearch(''); setSearchQuery(''); }}
+              onClick={() => { 
+                onCategoryChange(index); 
+                if (onSearch) onSearch(''); 
+                setSearchQuery(''); 
+              }}
               className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-widest transition-all rounded-md ${
-                activeCategory === index + 1
+                activeCategory === index
                   ? 'bg-white text-zinc-950'
                   : 'text-zinc-500 hover:text-white hover:bg-zinc-800/70'
               }`}

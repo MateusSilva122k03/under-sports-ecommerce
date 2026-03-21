@@ -83,7 +83,6 @@ export default function ProductCarousel({ title, products }: ProductCarouselProp
               <div
                 key={product.id || index}
                 className="snap-start shrink-0 w-[155px] sm:w-[175px] md:w-[195px] lg:w-[230px]"
-                style={{ pointerEvents: isDragging ? 'none' : 'auto' }}
               >
                 <ProductCard
                   id={product.id}

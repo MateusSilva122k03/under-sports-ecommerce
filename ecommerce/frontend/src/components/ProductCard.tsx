@@ -44,11 +44,14 @@ export default function ProductCard({
   const isBrazil = displayTitle.toLowerCase().includes('brasil') || displayTitle.toLowerCase().includes('brazil');
 
   return (
-    <div className={`flex flex-col group h-full justify-between bg-zinc-900/50 rounded-lg p-2 hover:bg-zinc-900 transition-colors duration-300 ${isBrazil ? 'ring-2 ring-yellow-400' : ''}`}>
+    <div 
+      onClick={() => id && navigate(`/product/${id}`)}
+      className={`flex flex-col group h-full justify-between bg-zinc-900/50 rounded-lg p-2 hover:bg-zinc-900 transition-colors duration-300 cursor-pointer ${isBrazil ? 'ring-2 ring-yellow-400' : ''}`}
+    >
       <div>
         {/* Image container */}
         <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-zinc-900 mb-3">
-          <Link to={to} className="block w-full h-full" tabIndex={-1}>
+          <div className="block w-full h-full">
             <img
               src={imageError ? FALLBACK : image}
               alt={displayTitle}
@@ -56,7 +59,7 @@ export default function ProductCard({
               onError={() => setImageError(true)}
               loading="lazy"
             />
-          </Link>
+          </div>
 
           {/* Discount badge — monochromatic */}
           {discountPercent ? (

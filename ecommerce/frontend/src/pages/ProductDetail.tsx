@@ -65,7 +65,7 @@ export default function ProductDetail() {
   }, [activePromo, quantity]);
 
   // Find product across all categories
-  let product: { id: string; name: string; price: number; image: string; category: string; originalPrice?: number } | null = null;
+  let product: { id: string; name: string; price: number; image: string; images?: string[]; category: string; originalPrice?: number } | null = null;
   for (const cat of categories) {
     const found = cat.products.find(p => p.id === id);
     if (found) { product = found; break; }
@@ -88,7 +88,9 @@ export default function ProductDetail() {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
-  const productImages = [product.image, product.image, product.image];
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : [product.image];
 
   const togglePromo = (promo: '1_FOR_2' | '2_FOR_4') => {
     if (activePromo === promo) {
