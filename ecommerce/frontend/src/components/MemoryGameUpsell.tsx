@@ -42,7 +42,7 @@ const UPSELL_PRODUCTS = [
     name: 'Bola Adidas Copa do Mundo FIFA 26 Trionda Training',
     price: 124.95,
     oldPrice: 249.90,
-    image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSP3zbdWbkmyWorTWS5xSZAl9-LlZEpEVE1-L0GAidwchltGMLBJjpFDbKwTcZFbRTqGJJcji1-hTJgeREITnqo--S8G8z6',
+    image: 'https://assets.adidas.com/images/w_600,f_auto,q_auto/93361e3d36b8408f95c6439600909571_9366/Bola_Trionda_Training_Copa_do_Mundo_da_FIFA_26_Branco_JD8032_01_standard.jpg',
     discount: '50% OFF'
   }
 ];
