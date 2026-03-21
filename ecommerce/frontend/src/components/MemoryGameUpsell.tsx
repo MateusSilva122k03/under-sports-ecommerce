@@ -10,7 +10,7 @@ const UPSELL_PRODUCTS = [
     name: 'Álbum Copa 2026 - Luxo Prata',
     price: 135.45,
     oldPrice: 270.90,
-    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg', // Usando link estável do seu site como placeholder de alta qualidade
+    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg',
     discount: '50% OFF'
   },
   {
@@ -34,7 +34,7 @@ const UPSELL_PRODUCTS = [
     name: 'Kit Torcedor Brasil 12 Peças',
     price: 89.94,
     oldPrice: 149.90,
-    image: 'https://img.olx.com.br/images/52/527666496619939.jpg',
+    image: 'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
     discount: '40% OFF'
   },
   {
@@ -42,7 +42,7 @@ const UPSELL_PRODUCTS = [
     name: 'Bola Adidas Copa FIFA 26',
     price: 124.95,
     oldPrice: 249.90,
-    image: 'https://acdn-us.mitiendanube.com/stores/003/398/868/products/img_7048-461fc87952ddd4253017733695235942-1024-1024.webp',
+    image: 'https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg',
     discount: '50% OFF'
   }
 ];
@@ -61,7 +61,6 @@ export default function MemoryGameUpsell() {
   const [matched, setMatched] = useState<string[]>([]);
   const [lastMatchedProduct, setLastMatchedProduct] = useState<any>(null);
   const [isWon, setIsWon] = useState(false);
-  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   // Initialize game
   useEffect(() => {
@@ -79,7 +78,6 @@ export default function MemoryGameUpsell() {
       setMatched([]);
       setIsWon(false);
       setLastMatchedProduct(null);
-      setImageErrors({});
     }
   }, [showGame]);
 
@@ -178,41 +176,30 @@ export default function MemoryGameUpsell() {
                 >
                   {/* Front Side (Cover) */}
                   {!isFlipped ? (
-                    <div className="absolute inset-0 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center">
+                    <div className="absolute inset-0 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center overflow-hidden">
                       <div className="w-8 h-8 lg:w-10 lg:h-10 border-2 border-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500/30 font-black italic">
                         US
                       </div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent pointer-events-none" />
                     </div>
                   ) : (
-                    {/* Back Side (Image Revealed) */}
+                    /* Back Side (Image Revealed) */
                     <div 
-                      className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 lg:p-2 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
-                      style={{ transform: 'rotateY(180deg)' }}
+                      className="absolute inset-0 bg-white rounded-lg overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
+                      style={{ 
+                        transform: 'rotateY(180deg)',
+                        backgroundImage: `url(${card.image})`,
+                        backgroundSize: 'contain',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-referrer'
+                      } as any}
                     >
-                      {!imageErrors[index] ? (
-                        <img 
-                          src={card.image} 
-                          className="w-full h-full object-contain pointer-events-none" 
-                          alt="Upsell"
-                          referrerPolicy="no-referrer"
-                          onError={() => setImageErrors(prev => ({ ...prev, [index]: true }))}
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-center p-2 bg-yellow-500/10 h-full w-full">
-                          <Zap className="text-yellow-600 mb-1" size={16} />
-                          <span className="text-[8px] font-black uppercase text-yellow-800 leading-tight">
-                            {card.name.split(' ')[0]} <br/> {card.name.split(' ').slice(1).join(' ')}
-                          </span>
-                        </div>
-                      )}
-
                       {matched.includes(card.productId) && (
-                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
                           <CheckCircle2 className="text-green-600 drop-shadow-md" size={32} />
                         </div>
                       )}
                     </div>
-
                   )}
                 </motion.div>
               );
