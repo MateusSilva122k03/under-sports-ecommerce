@@ -23,6 +23,16 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     restart: unless-stopped
+    environment:
+      - SAFEPAY_PUBLIC_KEY=${SAFEPAY_PUBLIC_KEY}
+      - SAFEPAY_SECRET_KEY=${SAFEPAY_SECRET_KEY}
+      - CHECKIFY_API_KEY=${CHECKIFY_API_KEY}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - FB_PIXEL_ID=${FB_PIXEL_ID}
+      - FB_ACCESS_TOKEN=${FB_ACCESS_TOKEN}
+      - UTMIFY_KEY=${UTMIFY_KEY}
+      - NODE_ENV=production
+      - PORT=3001
     # Nós removemos o traefik do backend.
     # O nosso Nginx (frontend) já faz o proxy para http://backend:3001 internamente.
     # Isso evita conflito de rotas no Dokploy.
