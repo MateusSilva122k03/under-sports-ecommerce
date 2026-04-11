@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=/api
+    labels:
+      - "traefik.enable=true"
+      # Catch-all: qualquer host que chegue, manda pra esse container
+      - "traefik.http.routers.frontend.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+    networks:
+      - dokploy-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    # Nós removemos o traefik do backend.
+    # O nosso Nginx (frontend) já faz o proxy para http://backend:3001 internamente.
+    # Isso evita conflito de rotas no Dokploy.
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
+

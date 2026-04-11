@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalize seu pedido na Under Sports</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700&family=Teko:wght@500;700&display=swap');
+
+    body, table, td, a {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+      background-color: #09090b; /* bg-zinc-950 */
+      color: #ffffff;
+      font-family: 'Chivo', sans-serif;
+    }
+    .wrapper {
+      width: 100%;
+      table-layout: fixed;
+      background-color: #09090b;
+      padding-bottom: 40px;
+    }
+    .main {
+      background-color: #09090b;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 600px;
+      border-spacing: 0;
+      color: #ffffff;
+    }
+    .header {
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 1px solid #27272a;
+    }
+    .brand-name {
+      font-family: 'Teko', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .brand-accent {
+      color: #ffffff;
+    }
+    .content {
+      padding: 40px 20px;
+    }
+    .title {
+      font-family: 'Teko', sans-serif;
+      font-size: 36px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+    .text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #a1a1aa; /* text-zinc-400 */
+      margin-bottom: 24px;
+    }
+    .highlight-text {
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .order-box {
+      background-color: #18181b; /* bg-zinc-900 */
+      border: 1px solid #27272a; /* border-zinc-800 */
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+    .order-row.stacked {
+      display: block;
+    }
+    .order-row.stacked .order-label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    .order-row.stacked .order-value {
+      display: block;
+      font-weight: 400;
+      color: #e4e4e7;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .order-label {
+      color: #a1a1aa;
+    }
+    .order-value {
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .order-row:last-child {
+      margin-bottom: 0;
+      padding-top: 16px;
+      border-top: 1px dashed #3f3f46;
+      font-size: 18px;
+    }
+    .pix-section {
+      text-align: center;
+      background-color: #18181b;
+      border: 1px solid #ffffff;
+      border-radius: 8px;
+      padding: 32px 20px;
+      margin-bottom: 32px;
+    }
+    .pix-title {
+      font-family: 'Teko', sans-serif;
+      font-size: 28px;
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .pix-code-box {
+      background-color: #09090b;
+      border: 1px solid #27272a;
+      color: #a1a1aa;
+      padding: 16px;
+      font-family: monospace;
+      font-size: 14px;
+      word-break: break-all;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #ffffff;
+      color: #09090b;
+      font-family: 'Chivo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .urgency-section {
+      border-left: 4px solid #ffffff;
+      padding-left: 16px;
+      margin-bottom: 32px;
+    }
+    .urgency-title {
+      font-family: 'Teko', sans-serif;
+      font-size: 24px;
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .whatsapp-section {
+      background-color: #18181b;
+      padding: 24px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .whatsapp-btn {
+      display: inline-block;
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid #ffffff;
+      padding-bottom: 2px;
+      margin-top: 12px;
+    }
+    .footer {
+      text-align: center;
+      padding: 32px 20px;
+      border-top: 1px solid #27272a;
+      color: #71717a;
+      font-size: 12px;
+    }
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <table class="main">
+      <tr>
+        <td class="header">
+          <h1 class="brand-name">UNDER<span class="brand-accent">SPORTS</span></h1>
+        </td>
+      </tr>
+      <tr>
+        <td class="content">
+          <h2 class="title">Seu manto está quase em campo!</h2>
+          
+          <p class="text">Fala, <span class="highlight-text">{{nome_do_cliente}}</span>!</p>
+          
+          <p class="text">A arquibancada já está cantando o seu nome. Seu pedido está separado e aguardando apenas o apito final: a confirmação do seu pagamento. Não deixe o relógio estourar o tempo regulamentar.</p>
+
+          <div class="order-box">
+            <div class="order-row">
+              <span class="order-label">Pedido</span>
+              <span class="order-value">#{{numero_do_pedido}}</span>
+            </div>
+            <div class="order-row stacked">
+              <span class="order-label">Cliente</span>
+              <span class="order-value">{{nome_do_cliente}}<br>CPF: {{cpf_mascarado}}</span>
+            </div>
+            <div class="order-row">
+              <span class="order-label">Telefone</span>
+              <span class="order-value">{{telefone_cliente}}</span>
+            </div>
+            <div class="order-row stacked">
+              <span class="order-label">Endereço de Entrega</span>
+              <span class="order-value">{{rua_numero_complemento}}<br>{{bairro}} - {{cidade}}/{{estado}}<br>CEP: {{cep}}</span>
+            </div>
+            <div class="order-row">
+              <span class="order-label">Itens Reservados</span>
+              <span class="order-value">{{resumo_itens_carrinho}}</span>
+            </div>
+            <div class="order-row">
+              <span class="order-label">Total a Pagar</span>
+              <span class="order-value" style="color: #ffffff;">R$ {{valor_total}}</span>
+            </div>
+          </div>
+
+          <div class="pix-section">
+            <h3 class="pix-title">
+              <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+              Pagamento via PIX
+            </h3>
+            <p class="text" style="color: #ffffff; margin-bottom: 20px;">Aprovação instantânea via Under Sports Pag Seguro. Sem cera, direto pro ataque.</p>
+            
+            <div class="pix-code-box">
+              {{codigo_pix_copia_e_cola}}
+            </div>
+            
+            <a href="{{link_pagamento_pix}}" class="btn">Copiar Código PIX</a>
+          </div>
+
+          <div class="urgency-section">
+            <h4 class="urgency-title">
+              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Camisas Históricas Voam Rápido
+            </h4>
+            <p class="text" style="margin-bottom: 0;">Lembre-se: nosso acervo é disputado. Peças exclusivas e camisas retrô lendárias esgotam na velocidade de um contra-ataque. Se você garantiu uma Brasil 94, Milan 88 ou Arsenal 96 no carrinho, finalize agora. Não deixe outro torcedor roubar a sua glória.</p>
+          </div>
+
+          <div class="whatsapp-section">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" style="margin-bottom: 12px;">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <p class="text" style="color: #ffffff; margin-bottom: 8px; font-weight: 700;">VAR acionado?</p>
+            <p class="text" style="margin-bottom: 0; font-size: 14px;">Se pintar qualquer dúvida sobre tamanhos, personalização ou envio, nossa equipe está aquecendo no banco de reservas, pronta para entrar em campo e te ajudar.</p>
+            <a href="https://wa.me/seunumerodewhatsapp" class="whatsapp-btn">Chamar no WhatsApp</a>
+          </div>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="footer">
+          <p style="margin: 0 0 8px 0;"><strong>UNDER SPORTS</strong></p>
+          <p style="margin: 0 0 8px 0;">O maior acervo de camisas atuais e históricas do futebol mundial.</p>
+          <p style="margin: 0;">Você recebeu este e-mail pois iniciou um checkout em nossa loja.</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
