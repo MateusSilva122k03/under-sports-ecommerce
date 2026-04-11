@@ -32,12 +32,28 @@ interface PixPaymentResponse {
 const PUBLIC_KEY = process.env.SAFEPAY_PUBLIC_KEY || '';
 const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || '';
 
-// Debug: log credential status
+// Debug: log credential status with detailed validation
 console.log('🔐 SafeFyPay Credentials Check:');
 console.log(`   PUBLIC_KEY loaded: ${PUBLIC_KEY ? '✅ Yes' : '❌ No (empty)'}`);
 console.log(`   SECRET_KEY loaded: ${SECRET_KEY ? '✅ Yes' : '❌ No (empty)'}`);
-if (PUBLIC_KEY) console.log(`   PUBLIC_KEY starts with: ${PUBLIC_KEY.substring(0, 10)}...`);
-if (SECRET_KEY) console.log(`   SECRET_KEY starts with: ${SECRET_KEY.substring(0, 10)}...`);
+if (PUBLIC_KEY) {
+  console.log(`   PUBLIC_KEY length: ${PUBLIC_KEY.length} chars`);
+  console.log(`   PUBLIC_KEY starts with: ${PUBLIC_KEY.substring(0, 15)}...`);
+  console.log(`   PUBLIC_KEY format valid: ${PUBLIC_KEY.startsWith('pk_') ? '✅ Yes (pk_)' : '❌ No (expected pk_)'}`);
+}
+if (SECRET_KEY) {
+  console.log(`   SECRET_KEY length: ${SECRET_KEY.length} chars`);
+  console.log(`   SECRET_KEY starts with: ${SECRET_KEY.substring(0, 15)}...`);
+  console.log(`   SECRET_KEY format valid: ${SECRET_KEY.startsWith('sk_') ? '✅ Yes (sk_)' : '❌ No (expected sk_)'}`);
+}
+
+// Check for whitespace issues
+if (PUBLIC_KEY && /\s/.test(PUBLIC_KEY)) {
+  console.warn('⚠️  PUBLIC_KEY contains whitespace! This will cause auth errors.');
+}
+if (SECRET_KEY && /\s/.test(SECRET_KEY)) {
+  console.warn('⚠️  SECRET_KEY contains whitespace! This will cause auth errors.');
+}
 
 const sdk = new SafefyPaymentSDK({
   publicKey: PUBLIC_KEY,
