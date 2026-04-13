@@ -2,8 +2,20 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
-// Instantiate Resend - using environment variable
-const resend = new Resend(process.env.RESEND_API_KEY || '');
+// Lazy-loaded Resend instance
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY || '';
+    if (!apiKey) {
+      console.warn('⚠️  RESEND_API_KEY not set - email functionality will not work');
+      // Create instance anyway (it will fail when actually trying to send)
+    }
+    resendInstance = new Resend(apiKey);
+  }
+  return resendInstance;
+}
 
 export const sendPixEmail = async (data: {
   email: string;
@@ -31,6 +43,7 @@ export const sendPixEmail = async (data: {
       .replace(/{{resumo_itens_carrinho}}/g, 'Camisas Under Sports')
       .replace(/{{link_pagamento_pix}}/g, '#');
 
+    const resend = getResend();
     await resend.emails.send({
       from: 'Under Sports <contato@undersports.shop>', // Needs a verified domain on Resend
       to: [data.email],
@@ -66,6 +79,7 @@ export const sendPaymentApprovedEmail = async (data: {
       .replace(/{{cep}}/g, '-')
       .replace(/{{resumo_itens_carrinho}}/g, 'Camisas Under Sports');
 
+    const resend = getResend();
     await resend.emails.send({
       from: 'Under Sports <contato@undersports.shop>', // Needs a verified domain on Resend
       to: [data.email],

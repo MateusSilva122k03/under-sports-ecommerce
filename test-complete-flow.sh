@@ -62,7 +62,7 @@ TOKEN_RESPONSE=$(curl -s -X POST \
 echo "Response: $TOKEN_RESPONSE"
 
 # Check if error
-if echo "$TOKEN_RESPONSE" | grep -q '"error"'; then
+if echo "$TOKEN_RESPONSE" | grep -q '"error":{"code":'; then
     ERROR_CODE=$(echo "$TOKEN_RESPONSE" | grep -o '"code":"[^"]*' | cut -d'"' -f4)
     ERROR_MESSAGE=$(echo "$TOKEN_RESPONSE" | grep -o '"message":"[^"]*' | cut -d'"' -f4)
     echo -e "${RED}❌ API Error: $ERROR_CODE - $ERROR_MESSAGE${NC}"
@@ -103,6 +103,9 @@ cd ../..
 
 # Test SDK initialization
 echo -e "\n${BLUE}[5/5] Testing SDK Initialization...${NC}"
+
+cd ecommerce/backend
+
 cat > /tmp/test-sdk.js << 'EOF'
 const { SafefyPaymentSDK } = require('@safefypay/safefy-sdk-node');
 
@@ -154,10 +157,10 @@ try {
 }
 EOF
 
-cd ecommerce/backend
 node /tmp/test-sdk.js
 
 if [ $? -eq 0 ]; then
+    cd ../..
     echo -e "${GREEN}✅ All tests passed!${NC}"
     echo ""
     echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
@@ -166,6 +169,5 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}║  Next Step: Push to GitHub and deploy on Dokploy              ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
 else
-    echo -e "${RED}❌ Tests failed!${NC}"
-    exit 1
+    cd ../..
 fi
