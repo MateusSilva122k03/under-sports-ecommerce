@@ -1,13 +1,13 @@
+// Load environment variables FIRST, before any other imports
+require('dotenv').config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { createPixPayment, getPaymentStatus } from './pix';
 import { consultCpf } from './checkify';
 import { initDb, saveOrder, updateOrderStatus, getOrderByExternalId } from './db';
 import { sendCAPIEvent } from './capi';
 import { sendPixEmail, sendPaymentApprovedEmail } from './mailer';
-
-dotenv.config();
 
 // Debug: Mostrar todas variáveis de ambiente carregadas
 console.log('\n🔍 Environment Variables Loaded:');
@@ -71,10 +71,10 @@ async function handlePaymentSuccess(paymentId: string, order: any, origin?: stri
 app.post('/api/create-payment', async (req, res) => {
   try {
     const { amount, description, customer, externalId } = req.body;
-    
+
     if (!amount || !description) {
-      return res.status(400).json({ 
-        error: { message: 'Amount and description are required' } 
+      return res.status(400).json({
+        error: { message: 'Amount and description are required' }
       });
     }
 
@@ -128,8 +128,8 @@ app.post('/api/create-payment', async (req, res) => {
     res.json(payment);
   } catch (error) {
     console.error('Payment error:', error);
-    res.status(500).json({ 
-      error: { message: error instanceof Error ? error.message : 'Erro ao criar pagamento' } 
+    res.status(500).json({
+      error: { message: error instanceof Error ? error.message : 'Erro ao criar pagamento' }
     });
   }
 });
@@ -141,7 +141,7 @@ app.post('/api/webhook/safefypay', async (req, res) => {
     console.log('📬 Webhook recebido da SafeFyPay:', JSON.stringify(payload, null, 2));
 
     const { id, status } = payload;
-    
+
     if (!id || !status) {
       console.warn('⚠️ Webhook recebido sem ID ou Status');
       return res.status(400).send('Invalid payload');
@@ -187,8 +187,8 @@ app.get('/api/payment/:id', async (req, res) => {
     res.json(payment);
   } catch (error) {
     console.error('Payment status error:', error);
-    res.status(500).json({ 
-      error: { message: error instanceof Error ? error.message : 'Erro ao buscar pagamento' } 
+    res.status(500).json({
+      error: { message: error instanceof Error ? error.message : 'Erro ao buscar pagamento' }
     });
   }
 });
@@ -204,8 +204,8 @@ app.get('/api/consult-cpf/:cpf', async (req, res) => {
     res.json({ data });
   } catch (error) {
     console.error('Checkify API route error:', error);
-    res.status(500).json({ 
-      error: { message: error instanceof Error ? error.message : 'Erro ao consultar CPF' } 
+    res.status(500).json({
+      error: { message: error instanceof Error ? error.message : 'Erro ao consultar CPF' }
     });
   }
 });
