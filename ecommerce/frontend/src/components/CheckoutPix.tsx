@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Copy, Check, QrCode, Loader2, MapPin, Search } from 'lucide-react';
+import { X, Copy, Check, QrCode, Loader2, MapPin, Search, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { safePayService, PixPaymentResponse } from '../services/safepay';
 
@@ -303,9 +303,11 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="text-xs text-red-500 hover:text-red-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="text-xs text-red-500 hover:text-red-400 mt-1 flex items-center gap-2"
+                          aria-label={`Remover ${item.name}`}
                         >
-                          Remover
+                          <Trash2 size={14} />
+                          <span>Remover</span>
                         </button>
                       </div>
                     </div>
