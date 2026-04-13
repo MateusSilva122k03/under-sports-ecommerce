@@ -51,19 +51,19 @@ export const categories: Category[] = [
       { id: 'mj_wc2026_0', name: 'Côte d\'Ivoire Home Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20260205/9231153365d19800876a3501a985e807ecf6c44648f=f3381zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_1', name: 'Morocco Home Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20260205/b13166335a9daf7fad72a0e6d530d5e6e8172390d2a=027e6zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_2', name: 'Czech Home Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251225/6e311433edac5d4ca582a9e5e631f0ac51f64992f8c=af78czo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
-      { 
-        id: 'mj_wc2026_3', 
-        name: 'Brazil Home Jersey World Cup 2026', 
-        price: 97.9, 
-        image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg'),
+      {
+        id: 'mj_wc2026_3',
+        name: 'Brazil Home Jersey World Cup 2026',
+        price: 97.9,
+        image: normalizeImageUrl('https://imgnike-a.akamaihd.net/360x360/09761915A3.jpg'),
         images: [
-          'https://cf.minejerseys.ru/upload/ttmall/img/20260202/fb318a33aa70deb8e54dd269c56002346f6dfaddc60=ffcdczo6vvl6vvufowebp.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09761915A3.jpg',
           'https://acdn-us.mitiendanube.com/stores/002/042/833/products/camisa-brasil-2026-amarela-versao-jogador-nike-copa-do-mundo-2026-2-7866b314333c78209b17694683265547-1024-1024.webp',
           'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_2_20260115095620_4da26844e230.jpg',
           'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg'
         ],
-        category: 'copa_mundo_2026', 
-        subcategory: '' 
+        category: 'copa_mundo_2026',
+        subcategory: ''
       },
       { id: 'mj_wc2026_4', name: 'Uruguay Home Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251220/7b31213380a74775d8b8a5af9d93048ee4569754d61=a3012zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_5', name: 'France Home Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251218/9d31f1335b23d63a10d37c562276e8fef8d30ba0a6d=f9db2zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
@@ -110,10 +110,10 @@ export const categories: Category[] = [
       { id: 'mj_wc2026_46', name: 'Colombia Away Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251217/61319a3309776cc6dcc05c5f65523d479b11edf4676=78664zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_47', name: 'Wales Away Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251126/c23146334c365fb5df2630add031742b349a31ac9c7=b75d5zo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_48', name: 'Portugal Away Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251124/49310c3306fdcdfbbb93b137a906a14a8543997b009=2cbbbzo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
-      { 
-        id: 'mj_wc2026_49', 
-        name: 'Brazil Away Jersey World Cup 2026', 
-        price: 97.9, 
+      {
+        id: 'mj_wc2026_49',
+        name: 'Brazil Away Jersey World Cup 2026',
+        price: 97.9,
         image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg'),
         images: [
           'https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg',
@@ -121,8 +121,8 @@ export const categories: Category[] = [
           'https://acdn-us.mitiendanube.com/stores/003/398/868/products/img_7048-461fc87952ddd4253017733695235942-1024-1024.webp',
           'https://img.olx.com.br/images/52/527666496619939.jpg'
         ],
-        category: 'copa_mundo_2026', 
-        subcategory: '' 
+        category: 'copa_mundo_2026',
+        subcategory: ''
       },
       { id: 'mj_wc2026_50', name: 'Switzerland Goalkeeper Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251119/1431ff3344dd0b6abdb68f04f77e2e42520761118a8=b100dzo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
       { id: 'mj_wc2026_51', name: 'Scotland Away Jersey World Cup 2026', price: 97.9, image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251118/a4318b33dff0d5894f7040a9b426101486605fee6ec=c5bdbzo6vvl6vvufowebp.jpg'), category: 'copa_mundo_2026', subcategory: '' },
