@@ -1,4 +1,13 @@
-// Load environment variables FIRST, before any other imports
+// Load environment variables FIRST from file system, then from system env vars
+import { loadEnvFile, validateEnvVars } from './env-loader';
+
+// Attempt to load .env file from multiple locations
+loadEnvFile();
+
+// Validate that required variables are set
+validateEnvVars();
+
+// Use dotenv as fallback (in case some vars weren't loaded from file)
 require('dotenv').config();
 
 import express from 'express';
@@ -8,18 +17,6 @@ import { consultCpf } from './checkify';
 import { initDb, saveOrder, updateOrderStatus, getOrderByExternalId } from './db';
 import { sendCAPIEvent } from './capi';
 import { sendPixEmail, sendPaymentApprovedEmail } from './mailer';
-
-// Debug: Mostrar todas variáveis de ambiente carregadas
-console.log('\n🔍 Environment Variables Loaded:');
-console.log('=====================================');
-const envVars = ['SAFEPAY_PUBLIC_KEY', 'SAFEPAY_SECRET_KEY', 'CHECKIFY_API_KEY', 'RESEND_API_KEY', 'FB_PIXEL_ID', 'FB_ACCESS_TOKEN', 'NODE_ENV', 'PORT'];
-envVars.forEach(varName => {
-  const value = process.env[varName];
-  const status = value ? '✅' : '❌';
-  const display = value ? `${value.substring(0, 20)}...` : 'EMPTY';
-  console.log(`${status} ${varName}: ${display}`);
-});
-console.log('=====================================\n');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
