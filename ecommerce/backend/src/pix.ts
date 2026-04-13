@@ -28,42 +28,77 @@ interface PixPaymentResponse {
   updatedAt?: string;
 }
 
-// Get credentials from environment
-const PUBLIC_KEY = process.env.SAFEPAY_PUBLIC_KEY || '';
-const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || '';
+/**
+ * LAZY LOAD SDK - Only initialize when first needed
+ * This ensures environment variables are loaded before SDK instantiation
+ */
+let sdkInstance: SafefyPaymentSDK | null = null;
 
-// Debug: log credential status with detailed validation
-console.log('🔐 SafeFyPay Credentials Check:');
-console.log(`   PUBLIC_KEY loaded: ${PUBLIC_KEY ? '✅ Yes' : '❌ No (empty)'}`);
-console.log(`   SECRET_KEY loaded: ${SECRET_KEY ? '✅ Yes' : '❌ No (empty)'}`);
-if (PUBLIC_KEY) {
-  console.log(`   PUBLIC_KEY length: ${PUBLIC_KEY.length} chars`);
-  console.log(`   PUBLIC_KEY starts with: ${PUBLIC_KEY.substring(0, 15)}...`);
-  console.log(`   PUBLIC_KEY format valid: ${PUBLIC_KEY.startsWith('pk_') ? '✅ Yes (pk_)' : '❌ No (expected pk_)'}`);
-}
-if (SECRET_KEY) {
-  console.log(`   SECRET_KEY length: ${SECRET_KEY.length} chars`);
-  console.log(`   SECRET_KEY starts with: ${SECRET_KEY.substring(0, 15)}...`);
-  console.log(`   SECRET_KEY format valid: ${SECRET_KEY.startsWith('sk_') ? '✅ Yes (sk_)' : '❌ No (expected sk_)'}`);
+function initializeSDK(): SafefyPaymentSDK {
+  if (sdkInstance) {
+    return sdkInstance;
+  }
+
+  const PUBLIC_KEY = process.env.SAFEPAY_PUBLIC_KEY || '';
+  const SECRET_KEY = process.env.SAFEPAY_SECRET_KEY || '';
+
+  // Debug: log credential status with detailed validation
+  console.log('\n🔐 SafeFyPay SDK Initialization:');
+  console.log(`   PUBLIC_KEY loaded: ${PUBLIC_KEY ? '✅ Yes' : '❌ No (empty)'}`);
+  console.log(`   SECRET_KEY loaded: ${SECRET_KEY ? '✅ Yes' : '❌ No (empty)'}`);
+
+  if (!PUBLIC_KEY || !SECRET_KEY) {
+    throw new Error('❌ FATAL: SafeFyPay credentials not loaded! Cannot initialize SDK.');
+  }
+
+  if (PUBLIC_KEY) {
+    console.log(`   PUBLIC_KEY length: ${PUBLIC_KEY.length} chars`);
+    console.log(`   PUBLIC_KEY starts with: ${PUBLIC_KEY.substring(0, 15)}...`);
+    console.log(`   PUBLIC_KEY format valid: ${PUBLIC_KEY.startsWith('pk_') ? '✅ Yes (pk_)' : '❌ No (expected pk_)'}`);
+  }
+  if (SECRET_KEY) {
+    console.log(`   SECRET_KEY length: ${SECRET_KEY.length} chars`);
+    console.log(`   SECRET_KEY starts with: ${SECRET_KEY.substring(0, 15)}...`);
+    console.log(`   SECRET_KEY format valid: ${SECRET_KEY.startsWith('sk_') ? '✅ Yes (sk_)' : '❌ No (expected sk_)'}`);
+  }
+
+  // Check for whitespace issues
+  if (/\s/.test(PUBLIC_KEY)) {
+    throw new Error('❌ FATAL: PUBLIC_KEY contains whitespace! This will cause auth errors.');
+  }
+  if (/\s/.test(SECRET_KEY)) {
+    throw new Error('❌ FATAL: SECRET_KEY contains whitespace! This will cause auth errors.');
+  }
+
+  console.log('   ✅ Enabling detailed SDK logging...\n');
+
+  sdkInstance = new SafefyPaymentSDK({
+    publicKey: PUBLIC_KEY,
+    secretKey: SECRET_KEY,
+    log: {
+      enabled: true,
+      colors: true,
+      level: 'debug',
+      includeHeaders: true,
+      includeBody: true,
+    },
+  });
+
+  console.log('   ✅ SDK initialized successfully!\n');
+  return sdkInstance;
 }
 
-// Check for whitespace issues
-if (PUBLIC_KEY && /\s/.test(PUBLIC_KEY)) {
-  console.warn('⚠️  PUBLIC_KEY contains whitespace! This will cause auth errors.');
+function getSDK(): SafefyPaymentSDK {
+  return initializeSDK();
 }
-if (SECRET_KEY && /\s/.test(SECRET_KEY)) {
-  console.warn('⚠️  SECRET_KEY contains whitespace! This will cause auth errors.');
-}
-
-const sdk = new SafefyPaymentSDK({
-  publicKey: PUBLIC_KEY,
-  secretKey: SECRET_KEY,
-});
 
 export async function createPixPayment(request: PaymentRequest): Promise<PixPaymentResponse> {
   const { amount, description, externalId, customer } = request;
 
   try {
+    // Initialize SDK on first use (lazy loading)
+    const sdk = getSDK();
+
     const payload: any = {
       method: 'Pix',
       amount,
@@ -117,6 +152,7 @@ export async function createPixPayment(request: PaymentRequest): Promise<PixPaym
 
 export async function getPaymentStatus(paymentId: string): Promise<PixPaymentResponse> {
   try {
+    const sdk = getSDK();
     const transaction = await sdk.transactions.get(paymentId);
     return {
       id: transaction.id,
