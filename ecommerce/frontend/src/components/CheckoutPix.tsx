@@ -33,10 +33,10 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
   const { items, total, clearCart } = useCart();
   const [customerData, setCustomerData] = useState({ name: '', email: '', phone: '', document: '' });
   const [addressData, setAddressData] = useState<AddressData>({ cep: '', street: '', number: '', complement: '', neighborhood: '', city: '', state: '' });
-  
+
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const [isLoadingCpf, setIsLoadingCpf] = useState(false);
-  
+
   const [paymentData, setPaymentData] = useState<PixPaymentResponse | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'Pending' | 'Paid' | 'Failed'>('Pending');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
   const handleDocumentChange = async (val: string) => {
     const formatted = formatDocument(val);
     setCustomerData(prev => ({ ...prev, document: formatted }));
-    
+
     const clean = val.replace(/\D/g, '');
     if (clean.length === 11) {
       setIsLoadingCpf(true);
@@ -81,7 +81,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
         const backendUrl = import.meta.env.VITE_API_URL || '/api';
         const res = await fetch(`${backendUrl}/consult-cpf/${clean}`);
         const result = await res.json();
-        
+
         if (res.ok && result.data) {
           const dados = result.data.dados;
           const telefones = result.data.telefones;
@@ -89,7 +89,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
           const enderecos = result.data.enderecos;
 
           const newData = { ...customerData, document: formatted };
-          
+
           if (dados?.NOME) newData.name = dados.NOME;
           if (telefones && telefones.length > 0) newData.phone = formatPhone(telefones[0].TELEFONE);
           if (emails && emails.length > 0) newData.email = emails[0].EMAIL;
@@ -136,9 +136,9 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
   if (!isOpen) return null;
 
   const handleCreatePayment = async () => {
-    if (!customerData.name || !customerData.email || !customerData.document) { 
-      setError('Por favor, preencha nome, e-mail e CPF'); 
-      return; 
+    if (!customerData.name || !customerData.email || !customerData.document) {
+      setError('Por favor, preencha nome, e-mail e CPF');
+      return;
     }
     setIsLoading(true); setError(null);
     try {
@@ -146,7 +146,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
       const amountInCents = Math.round(finalTotal * 100);
       const itemDescriptions = items.slice(0, 3).map(i => i.name).join(', ');
       const description = items.length > 3 ? `${itemDescriptions} +${items.length - 3} itens` : itemDescriptions;
-      const response = await safePayService.createPixPayment(amountInCents, description, externalId);
+      const response = await safePayService.createPixPayment(amountInCents, description, externalId, shippingMethod);
       setPaymentData(response);
       setPaymentStatus('Pending');
     } catch (err) {
@@ -228,14 +228,14 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                 {/* CPF - Primeiro campo com Auto-preenchimento */}
                 <div className="relative">
                   <label className={LABEL}>CPF *</label>
-                  <input 
-                    type="text" 
-                    inputMode="numeric" 
-                    value={customerData.document} 
-                    onChange={e => handleDocumentChange(e.target.value)} 
-                    className={INPUT} 
-                    placeholder="000.000.000-00" 
-                    maxLength={14} 
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={customerData.document}
+                    onChange={e => handleDocumentChange(e.target.value)}
+                    className={INPUT}
+                    placeholder="000.000.000-00"
+                    maxLength={14}
                     autoFocus
                   />
                   {isLoadingCpf ? (
@@ -299,8 +299,8 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                   </div>
                   <div className="pt-2">
                     <label className={LABEL}>Método de Envio</label>
-                    <select 
-                      value={shippingMethod} 
+                    <select
+                      value={shippingMethod}
                       onChange={e => setShippingMethod(e.target.value as 'normal' | 'sedex')}
                       className={`${INPUT} appearance-none cursor-pointer`}
                     >
@@ -337,7 +337,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                   <p className="text-zinc-400 mb-8 leading-relaxed">
                     Seu pedido foi confirmado com sucesso e já estamos preparando o seu envio. Acompanhe os detalhes pelo seu e-mail.
                   </p>
-                  
+
                   <button
                     onClick={handleFinish}
                     className="w-full bg-green-500 text-zinc-950 py-4 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)]"

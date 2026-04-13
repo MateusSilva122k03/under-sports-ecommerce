@@ -67,7 +67,7 @@ async function handlePaymentSuccess(paymentId: string, order: any, origin?: stri
 // PIX Payment routes
 app.post('/api/create-payment', async (req, res) => {
   try {
-    const { amount, description, customer, externalId } = req.body;
+    const { amount, description, customer, externalId, shippingMethod } = req.body;
 
     if (!amount || !description) {
       return res.status(400).json({
@@ -94,7 +94,8 @@ app.post('/api/create-payment', async (req, res) => {
         document: customer.document || '',
         amount: amount,
         status: 'Pending',
-        pix_code: payment.pixCode || ''
+        pix_code: payment.pixCode || '',
+        shipping_method: shippingMethod || 'normal'
       });
 
       // Send CAPI InitiateCheckout Event

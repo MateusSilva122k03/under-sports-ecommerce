@@ -51,7 +51,7 @@ class SafePayService {
     body?: unknown
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -90,12 +90,14 @@ class SafePayService {
   async createPixPayment(
     amount: number,
     description: string,
-    externalId?: string
+    externalId?: string,
+    shippingMethod?: 'normal' | 'sedex'
   ): Promise<PixPaymentResponse> {
     const payload = {
       amount,
       description,
       ...(externalId && { externalId }),
+      ...(shippingMethod && { shippingMethod }),
     };
 
     return this.request<PixPaymentResponse>('/create-payment', 'POST', payload);

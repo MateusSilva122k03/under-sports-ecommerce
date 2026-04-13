@@ -21,6 +21,7 @@ export const initDb = async () => {
         amount INTEGER,
         status VARCHAR(50) DEFAULT 'Pending',
         pix_code TEXT,
+        shipping_method VARCHAR(50) DEFAULT 'normal',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -32,12 +33,12 @@ export const initDb = async () => {
 
 export const saveOrder = async (orderData: any) => {
   try {
-    const { external_id, name, email, phone, document, amount, status, pix_code } = orderData;
+    const { external_id, name, email, phone, document, amount, status, pix_code, shipping_method } = orderData;
     await pool.query(
-      `INSERT INTO orders (external_id, name, email, phone, document, amount, status, pix_code) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `INSERT INTO orders (external_id, name, email, phone, document, amount, status, pix_code, shipping_method)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        ON CONFLICT (external_id) DO NOTHING`,
-      [external_id, name, email, phone, document, amount, status, pix_code]
+      [external_id, name, email, phone, document, amount, status, pix_code, shipping_method || 'normal']
     );
   } catch (error) {
     console.error('Error saving order:', error);
