@@ -9,6 +9,18 @@ import { sendPixEmail, sendPaymentApprovedEmail } from './mailer';
 
 dotenv.config();
 
+// Debug: Mostrar todas variáveis de ambiente carregadas
+console.log('\n🔍 Environment Variables Loaded:');
+console.log('=====================================');
+const envVars = ['SAFEPAY_PUBLIC_KEY', 'SAFEPAY_SECRET_KEY', 'CHECKIFY_API_KEY', 'RESEND_API_KEY', 'FB_PIXEL_ID', 'FB_ACCESS_TOKEN', 'NODE_ENV', 'PORT'];
+envVars.forEach(varName => {
+  const value = process.env[varName];
+  const status = value ? '✅' : '❌';
+  const display = value ? `${value.substring(0, 20)}...` : 'EMPTY';
+  console.log(`${status} ${varName}: ${display}`);
+});
+console.log('=====================================\n');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 

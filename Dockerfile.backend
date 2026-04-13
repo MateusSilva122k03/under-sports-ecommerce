@@ -30,6 +30,8 @@ RUN npm ci --production
 COPY --from=builder /app/dist ./dist
 # Copy templates for emails
 COPY ecommerce/backend/templates ./templates
+# Copy environment file
+COPY .env .env
 
 # Expose port
 EXPOSE 3001
