@@ -55,12 +55,12 @@ export const categories: Category[] = [
         id: 'mj_wc2026_3',
         name: 'Brazil Home Jersey World Cup 2026',
         price: 97.9,
-        image: normalizeImageUrl('https://imgnike-a.akamaihd.net/360x360/09761915A3.jpg'),
+        image: normalizeImageUrl('https://imgnike-a.akamaihd.net/360x360/09780200A7.jpg'),
         images: [
-          'https://imgnike-a.akamaihd.net/360x360/09761915A3.jpg',
-          'https://acdn-us.mitiendanube.com/stores/002/042/833/products/camisa-brasil-2026-amarela-versao-jogador-nike-copa-do-mundo-2026-2-7866b314333c78209b17694683265547-1024-1024.webp',
-          'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_2_20260115095620_4da26844e230.jpg',
-          'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_torcedor_1_20260115095620_f188f201e95b.jpg'
+          'https://imgnike-a.akamaihd.net/360x360/09780200A7.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09780200A6.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09780200A3.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09780200A4.jpg'
         ],
         category: 'copa_mundo_2026',
         subcategory: ''
@@ -114,12 +114,12 @@ export const categories: Category[] = [
         id: 'mj_wc2026_49',
         name: 'Brazil Away Jersey World Cup 2026',
         price: 97.9,
-        image: normalizeImageUrl('https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg'),
+        image: normalizeImageUrl('https://imgnike-a.akamaihd.net/360x360/09761715A3.jpg'),
         images: [
-          'https://cf.minejerseys.ru/upload/ttmall/img/20251121/043135332732a0a93ccc37a030c188f635b2765f71c=87c09zo6vvl6vvufowebp.jpg',
-          'https://images.tcdn.com.br/img/img_prod/1044362/camisa_futebol_brasil_copa_do_mundo_2026_ii_torced_2_20260115102624_ddefea3fb457.jpg',
-          'https://acdn-us.mitiendanube.com/stores/003/398/868/products/img_7048-461fc87952ddd4253017733695235942-1024-1024.webp',
-          'https://img.olx.com.br/images/52/527666496619939.jpg'
+          'https://imgnike-a.akamaihd.net/360x360/09761715A3.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09761715A4.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09761715A6.jpg',
+          'https://imgnike-a.akamaihd.net/360x360/09761715A7.jpg'
         ],
         category: 'copa_mundo_2026',
         subcategory: ''
