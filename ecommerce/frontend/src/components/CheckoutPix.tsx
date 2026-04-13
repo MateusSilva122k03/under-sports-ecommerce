@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Copy, Check, QrCode, Loader2, MapPin, Search } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { safePayService, PixPaymentResponse } from '../services/safepay';
@@ -44,8 +44,37 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
   const [copied, setCopied] = useState(false);
   const [shippingMethod, setShippingMethod] = useState<'normal' | 'sedex'>('normal');
 
+  // Refs for abort control and debouncing
+  const cpfAbortControllerRef = useRef<AbortController | null>(null);
+  const cpfTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const shippingCost = shippingMethod === 'sedex' ? 29.87 : 0;
   const finalTotal = total + shippingCost;
+
+  // Cleanup on unmount or when modal closes
+  useEffect(() => {
+    return () => {
+      if (cpfAbortControllerRef.current) {
+        cpfAbortControllerRef.current.abort();
+      }
+      if (cpfTimeoutRef.current) {
+        clearTimeout(cpfTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Reset CPF request handlers when modal opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      // Cancel ongoing CPF request when modal closes
+      if (cpfAbortControllerRef.current) {
+        cpfAbortControllerRef.current.abort();
+      }
+      if (cpfTimeoutRef.current) {
+        clearTimeout(cpfTimeoutRef.current);
+      }
+    }
+  }, [isOpen]);
 
   // Polling for payment status
   useEffect(() => {
@@ -69,51 +98,74 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
     return () => clearInterval(intervalId);
   }, [paymentData, paymentStatus]);
 
-  // CPF / Checkify Integration
+  // CPF / Checkify Integration - With proper abort control and debouncing
   const handleDocumentChange = async (val: string) => {
     const formatted = formatDocument(val);
     setCustomerData(prev => ({ ...prev, document: formatted }));
 
     const clean = val.replace(/\D/g, '');
     if (clean.length === 11) {
-      setIsLoadingCpf(true);
-      try {
-        const backendUrl = import.meta.env.VITE_API_URL || '/api';
-        const res = await fetch(`${backendUrl}/consult-cpf/${clean}`);
-        const result = await res.json();
-
-        if (res.ok && result.data) {
-          const dados = result.data.dados;
-          const telefones = result.data.telefones;
-          const emails = result.data.emails;
-          const enderecos = result.data.enderecos;
-
-          const newData = { ...customerData, document: formatted };
-
-          if (dados?.NOME) newData.name = dados.NOME;
-          if (telefones && telefones.length > 0) newData.phone = formatPhone(telefones[0].TELEFONE);
-          if (emails && emails.length > 0) newData.email = emails[0].EMAIL;
-
-          setCustomerData(newData);
-
-          if (enderecos && enderecos.length > 0) {
-            const end = enderecos[0];
-            setAddressData({
-              cep: formatCEP(end.CEP || ''),
-              street: end.LOGRADOURO || '',
-              number: '', // The API sometimes returns number in LOGRADOURO or separately, we let user type if empty
-              complement: end.COMPLEMENTO || '',
-              neighborhood: end.BAIRRO || '',
-              city: end.CIDADE || '',
-              state: end.UF || ''
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Falha ao consultar CPF:", err);
-      } finally {
-        setIsLoadingCpf(false);
+      // Cancel previous request if ongoing
+      if (cpfAbortControllerRef.current) {
+        cpfAbortControllerRef.current.abort();
       }
+
+      // Clear previous timeout
+      if (cpfTimeoutRef.current) {
+        clearTimeout(cpfTimeoutRef.current);
+      }
+
+      // Debounce: wait 300ms before sending request
+      cpfTimeoutRef.current = setTimeout(async () => {
+        setIsLoadingCpf(true);
+        try {
+          // Create new abort controller for this request
+          const abortController = new AbortController();
+          cpfAbortControllerRef.current = abortController;
+
+          const backendUrl = import.meta.env.VITE_API_URL || '/api';
+          const res = await fetch(`${backendUrl}/consult-cpf/${clean}`, {
+            signal: abortController.signal
+          });
+          const result = await res.json();
+
+          if (res.ok && result.data) {
+            const dados = result.data.dados;
+            const telefones = result.data.telefones;
+            const emails = result.data.emails;
+            const enderecos = result.data.enderecos;
+
+            // Update all data at once to avoid inconsistent state
+            const newData = { name: '', email: '', phone: '', document: formatted };
+
+            if (dados?.NOME) newData.name = dados.NOME;
+            if (telefones && telefones.length > 0) newData.phone = formatPhone(telefones[0].TELEFONE);
+            if (emails && emails.length > 0) newData.email = emails[0].EMAIL;
+
+            setCustomerData(newData);
+
+            if (enderecos && enderecos.length > 0) {
+              const end = enderecos[0];
+              setAddressData({
+                cep: formatCEP(end.CEP || ''),
+                street: end.LOGRADOURO || '',
+                number: '',
+                complement: end.COMPLEMENTO || '',
+                neighborhood: end.BAIRRO || '',
+                city: end.CIDADE || '',
+                state: end.UF || ''
+              });
+            }
+          }
+        } catch (err: any) {
+          // Ignore abort errors (user typed something else)
+          if (err.name !== 'AbortError') {
+            console.error("Falha ao consultar CPF:", err);
+          }
+        } finally {
+          setIsLoadingCpf(false);
+        }
+      }, 300);
     }
   };
 
@@ -146,7 +198,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
       const amountInCents = Math.round(finalTotal * 100);
       const itemDescriptions = items.slice(0, 3).map(i => i.name).join(', ');
       const description = items.length > 3 ? `${itemDescriptions} +${items.length - 3} itens` : itemDescriptions;
-      
+
       // Retry logic for credential initialization issues
       let lastError: unknown = null;
       for (let attempt = 1; attempt <= 3; attempt++) {
@@ -158,7 +210,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
         } catch (err) {
           lastError = err;
           const errorMsg = err instanceof Error ? err.message.toLowerCase() : '';
-          
+
           // Only retry if it's a credential/initialization error
           if (errorMsg.includes('credencial') || errorMsg.includes('inativa') || errorMsg.includes('revogada')) {
             console.warn(`Attempt ${attempt}/3 failed with credential error:`, err);
@@ -173,7 +225,7 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
           }
         }
       }
-      
+
       // All retries exhausted
       throw lastError;
     } catch (err) {

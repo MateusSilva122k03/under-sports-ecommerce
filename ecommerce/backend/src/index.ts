@@ -198,9 +198,17 @@ app.get('/api/payment/:id', async (req, res) => {
 app.get('/api/consult-cpf/:cpf', async (req, res) => {
   try {
     const { cpf } = req.params;
+    
     if (!cpf) {
-      return res.status(400).json({ error: { message: 'CPF is required' } });
+      return res.status(400).json({ error: { message: 'CPF é obrigatório' } });
     }
+
+    // Validate CPF format (must be 11 digits)
+    const cleanCpf = cpf.replace(/\D/g, '');
+    if (cleanCpf.length !== 11) {
+      return res.status(400).json({ error: { message: 'CPF deve conter 11 dígitos' } });
+    }
+
     const data = await consultCpf(cpf);
     res.json({ data });
   } catch (error) {
