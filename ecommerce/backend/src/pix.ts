@@ -169,3 +169,17 @@ export async function getPaymentStatus(paymentId: string): Promise<PixPaymentRes
     throw error;
   }
 }
+
+/**
+ * Warmup the SDK during server startup
+ * Ensures credentials are loaded and validated before any user requests
+ */
+export async function warmupSDK(): Promise<void> {
+  try {
+    console.log('\n🔥 Warming up SafeFyPay SDK...');
+    const sdk = getSDK();
+    console.log('✅ SafeFyPay SDK is ready!\n');
+  } catch (error) {
+    console.error('⚠️  SDK warmup failed (will retry on first request):', error);
+  }
+}

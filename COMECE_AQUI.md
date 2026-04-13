@@ -21,6 +21,7 @@ Identifiquei 100% do problema e resolvi:
 ## 🎯 3 PASSOS PARA VOCÊ FAZER DEPLOY
 
 ### PASSO 1: Acessar Dokploy
+
 ```
 URL: https://dokploy.recarga8.shop/
 Email: nontonbokepmantap@gmail.com
@@ -28,6 +29,7 @@ Senha: NontonOrangeMantap122k03
 ```
 
 ### PASSO 2: Adicionar Variáveis (5 minutos)
+
 1. Clique no Projeto: **Under Sports 3**
 2. Selecione a app: **backend**
 3. Vá em: **Environment** ou **Variables**
@@ -44,7 +46,7 @@ sk_production_0ad4a7eb84effc71fc08de5820452a1eae1aa51419664bcc55fbf2f42d379f56
 CHECKIFY_API_KEY
 ck_4e5edf84e6b93778bb5f524c0337ffe42245890377c95aed1d79b67797e0a392
 
-FB_PIXEL_ID  
+FB_PIXEL_ID
 781406367686573
 
 FB_ACCESS_TOKEN
@@ -53,7 +55,7 @@ EAAXQPCnz93UBQrr4qf9I4YALGkthtfG9QMSwZBAZC5Jqk8ZCEFHJTDLjFNuM2ZAuzQWtKTwv1FcffrO
 UTMIFY_KEY
 Arygdy7yP3itUoi7ElFN8T0Am99Oog7N408u
 
-NODE_ENV  
+NODE_ENV
 production
 
 PORT
@@ -63,13 +65,14 @@ PORT
 **Cada variável = Nome (KEY) + Valor (VALUE)**
 
 ### PASSO 3: Fazer Redeploy e Testar (10 minutos)
+
 1. Clique **Redeploy** ou **Deploy**
 2. Espere ~2-3 minutos o build compilar
 3. **Acompanhe os logs!** Procure por:
 
 ```
 ✅ SAFEPAY_PUBLIC_KEY carregada
-✅ SAFEPAY_SECRET_KEY carregada  
+✅ SAFEPAY_SECRET_KEY carregada
 ✅ Backend API running on port 3001
 ```
 
@@ -84,27 +87,30 @@ PORT
 ## ❌ Se DER ERRADO
 
 **Erro: "Credencial inativa ou revogada"**
+
 - Solução: Verifique se as variáveis foram adicionadas NO DASHBOARD (não se relaciona com arquivo .env)
 - Redeploy após adicionar
 
 **Erro: Variáveis não aparecem nos logs**
+
 - Solução: Você adicionou sem clicar em "Save"?
 - Redeploy manual
 
 **Qualquer outro erro:**
+
 - Screenshot dos logs e me manda!
 
 ---
 
 ## 📞 RESUMO
 
-| Tarefa | Tempo | Status |
-|--------|-------|--------|
-| Acessar Dokploy | 1 min | 👉 VOCÊ |
-| Adicionar 8 variáveis | 5 min | 👉 VOCÊ |
-| Redeploy | 3 min | Automático |
-| Teste PIX | 2 min | 👉 VOCÊ |
-| **Total** | **~15 min** | ✅ |
+| Tarefa                | Tempo       | Status     |
+| --------------------- | ----------- | ---------- |
+| Acessar Dokploy       | 1 min       | 👉 VOCÊ    |
+| Adicionar 8 variáveis | 5 min       | 👉 VOCÊ    |
+| Redeploy              | 3 min       | Automático |
+| Teste PIX             | 2 min       | 👉 VOCÊ    |
+| **Total**             | **~15 min** | ✅         |
 
 ---
 

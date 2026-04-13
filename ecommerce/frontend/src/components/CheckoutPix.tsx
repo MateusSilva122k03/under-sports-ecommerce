@@ -146,9 +146,36 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
       const amountInCents = Math.round(finalTotal * 100);
       const itemDescriptions = items.slice(0, 3).map(i => i.name).join(', ');
       const description = items.length > 3 ? `${itemDescriptions} +${items.length - 3} itens` : itemDescriptions;
-      const response = await safePayService.createPixPayment(amountInCents, description, externalId, shippingMethod);
-      setPaymentData(response);
-      setPaymentStatus('Pending');
+      
+      // Retry logic for credential initialization issues
+      let lastError: unknown = null;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const response = await safePayService.createPixPayment(amountInCents, description, externalId, shippingMethod);
+          setPaymentData(response);
+          setPaymentStatus('Pending');
+          return; // Success!
+        } catch (err) {
+          lastError = err;
+          const errorMsg = err instanceof Error ? err.message.toLowerCase() : '';
+          
+          // Only retry if it's a credential/initialization error
+          if (errorMsg.includes('credencial') || errorMsg.includes('inativa') || errorMsg.includes('revogada')) {
+            console.warn(`Attempt ${attempt}/3 failed with credential error:`, err);
+            if (attempt < 3) {
+              // Wait before retrying (exponential backoff: 500ms, 1000ms)
+              await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+              continue;
+            }
+          } else {
+            // Not a credential error, fail immediately
+            throw err;
+          }
+        }
+      }
+      
+      // All retries exhausted
+      throw lastError;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar pagamento');
     } finally { setIsLoading(false); }

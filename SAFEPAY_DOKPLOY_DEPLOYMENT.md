@@ -3,27 +3,32 @@
 ## 🎯 O que foi corrigido
 
 ### Problema Identificado
+
 O erro "Credencial inativa ou revogada" era causado por **inicialização prematura da SDK SafeFyPay** antes das variáveis de ambiente serem carregadas, resultando em uma SDK com credenciais vazias.
 
 ### Soluções Implementadas
 
 #### 1. **Lazy Loading da SafeFyPaymentSDK** ✅
+
 **Arquivo:** `ecommerce/backend/src/pix.ts`
+
 - Transformou inicialização do módulo em **lazy loading**
 - SDK só é criada quando `createPixPayment()` ou `getPaymentStatus()` são realmente chamados
 - Garante que credenciais já estejam em `process.env` quando SDK é inicializado
 - Implementa verificação de credenciais com detalhes de diagnóstico
 
 **Antes (❌ INCORRETO):**
+
 ```typescript
 // No nível do módulo - executa quando importa
 const sdk = new SafefyPaymentSDK({
-  publicKey: PUBLIC_KEY,  // Provavelmente vazio!
-  secretKey: SECRET_KEY,  // Provavelmente vazio!
+  publicKey: PUBLIC_KEY, // Provavelmente vazio!
+  secretKey: SECRET_KEY, // Provavelmente vazio!
 });
 ```
 
 **Depois (✅ CORRETO):**
+
 ```typescript
 // Function que só execute quando precisa
 function getSDK(): SafefyPaymentSDK {
@@ -45,31 +50,40 @@ export async function createPixPayment(request) {
 ```
 
 #### 2. **Environment Variable Loading Strategy** ✅
+
 **Arquivo:** `ecommerce/backend/src/env-loader.ts`
+
 - Implementa estratégia de fallback múltipla:
   1. **Primeiro:** Variáveis do sistema (Docker/docker-compose.yml)
   2. **Segundo:** Arquivo `.env` em múltiplas localizações
   3. Prioriza variáveis já carregadas (não duplica)
 
 **Variáveis encontradas em:**
+
 - `/app/.env` (copiado por Docker)
 - `/home/novousuario/Downloads/under-sports-ecommerce-main/ecommerce/backend/.env`
 - Root filesystem `/.env`
 
 #### 3. **Lazy Loading do Resend** ✅
+
 **Arquivo:** `ecommerce/backend/src/mailer.ts`
+
 - Mesma estratégia para Resend (email service)
 - Previne erros de inicialização se chave não estiver presente
 
 #### 4. **Dockerfile Atualizado** ✅
+
 **Arquivo:** `Dockerfile.backend`
+
 ```dockerfile
 # Tenta copiar .env (se existir no build context)
 COPY .env .env 2>/dev/null || true
 ```
 
 #### 5. **Test Script Completo** ✅
+
 **Arquivo:** `test-complete-flow.sh`
+
 - Testa 5 fases:
   1. ✅ Arquivo `.env` existe
   2. ✅ Credenciais válidas via API SafeFyPay
@@ -82,11 +96,13 @@ COPY .env .env 2>/dev/null || true
 ## 📋 Instruções para Deploy no Dokploy
 
 ### Passo 1: Acessar Dokploy
+
 1. URL: `https://dokploy.recarga8.shop/`
 2. Email: `nontonbokepmantap@gmail.com`
 3. Senha: `NontonOrangeMantap122k03`
 
 ### Passo 2: Configurar Variáveis de Ambiente
+
 1. Projeto: **Under Sports 3**
 2. Selecionar aplicação: **backend**
 3. Ir para **Environment** ou **Variables**
@@ -105,14 +121,17 @@ PORT=3001
 ```
 
 ### Passo 3: Fazer Redeploy
+
 1. Clique em **Redeploy** ou **Deploy**
 2. Aguarde build completar
 3. **Acompanhe os logs** para verificar se as variáveis foram carregadas
 
 ### Passo 4: Verificar Logs
+
 Você deve ver mensagens como:
 
 ✅ **Sucesso (procure por estas linhas nos logs):**
+
 ```
 📦 Environment Loading Strategy:
 1️⃣  Checking system environment variables (from Docker/docker-compose):
@@ -129,6 +148,7 @@ Você deve ver mensagens como:
 ```
 
 ❌ **Errro (evitar):**
+
 ```
 ❌ ERRO FATAL: As seguintes variáveis obrigatórias não estão definidas:
    - SAFEPAY_PUBLIC_KEY
@@ -142,10 +162,13 @@ Você deve ver mensagens como:
 Após deployment bem-sucedido, teste:
 
 ### 1. Health Check
+
 ```bash
 curl https://dokploy.recarga8.shop/api/health
 ```
+
 Deve retornar:
+
 ```json
 {
   "status": "OK",
@@ -154,7 +177,9 @@ Deve retornar:
 ```
 
 ### 2. Testar Criação de PIX
+
 Faça um POST para `/api/pix/create` com:
+
 ```json
 {
   "amount": 100,
@@ -167,6 +192,7 @@ Faça um POST para `/api/pix/create` com:
 ```
 
 Deve retornar:
+
 ```json
 {
   "id": "transaction-id-xxx",
@@ -178,6 +204,7 @@ Deve retornar:
 ```
 
 ### 3. Testar e-commerce End-to-End
+
 1. Ir para `https://undersports.shop`
 2. Adicionar produto ao carrinho
 3. Prosseguir para checkout
@@ -188,12 +215,12 @@ Deve retornar:
 
 ## 📊 Commits Realizados
 
-| Commit | Descrição |
-|--------|-----------|
+| Commit  | Descrição                                    |
+| ------- | -------------------------------------------- |
 | 71bb4bd | Lazy SDK initialization + robust env loading |
-| 37c26cc | Lazy loading for Resend mailer |
+| 37c26cc | Lazy loading for Resend mailer               |
 
-**Branch:** `main`  
+**Branch:** `main`
 **Últimas mudanças:** GitHub sincronizado ✓
 
 ---
@@ -203,10 +230,12 @@ Deve retornar:
 ### Problema: "Credencial inativa ou revogada" ainda ocorre?
 
 **Causa Possível:**
+
 - Variáveis não foram configuradas no dashboard Dokploy
 - Build não sincronizou os commits mais recentes
 
 **Solução:**
+
 1. Verifique **Environment Variables** no Dokploy dashboard
 2. Confirme que TODAS as variáveis foram adicionadas
 3. Clique **Redeploy**
@@ -216,9 +245,11 @@ Deve retornar:
 ### Problema: Logs não mostram mensagem de env loading?
 
 **Causa Possível:**
+
 - Está rodando código antigo (anterior ao commit 71bb4bd)
 
 **Solução:**
+
 1. Verifique se GitHub mostra os commits mais recentes
 2. Force um manual rebuild no Dokploy
 3. Verifique logs para confirmar versão correta está rodando
@@ -226,10 +257,12 @@ Deve retornar:
 ### Problema: "Missing API key" para Resend?
 
 **Causa Possível:**
+
 - Resend não é serviço crítico para pagamentos
 - Afeta apenas envio de emails
 
 **Solução:**
+
 - Configure `RESEND_API_KEY` no dashboard se quiser enviar emails
 - Sem a chave, emails não serão enviados mas pagamentos funcionarão
 
@@ -256,7 +289,7 @@ Deve retornar:
 
 2. **Taxa de Limite:** SafeFyPay API limita a 10 gerações de token por hora por credencial. Em produção, o SDK reusa tokens por 1 hora automaticamente.
 
-3. **Ambiente:** Credenciais usadas são producção (pk_production_, sk_production_). Transações reais de dinheiro serão processadas.
+3. **Ambiente:** Credenciais usadas são producção (pk*production*, sk*production*). Transações reais de dinheiro serão processadas.
 
 ---
 
@@ -270,6 +303,6 @@ Deve retornar:
 
 ---
 
-**Versão:** 1.0  
-**Data:** 12 de Abril de 2026  
-**Status:** ✅ Pronto para Deploy  
+**Versão:** 1.0
+**Data:** 12 de Abril de 2026
+**Status:** ✅ Pronto para Deploy

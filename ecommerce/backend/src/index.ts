@@ -12,7 +12,7 @@ require('dotenv').config();
 
 import express from 'express';
 import cors from 'cors';
-import { createPixPayment, getPaymentStatus } from './pix';
+import { createPixPayment, getPaymentStatus, warmupSDK } from './pix';
 import { consultCpf } from './checkify';
 import { initDb, saveOrder, updateOrderStatus, getOrderByExternalId } from './db';
 import { sendCAPIEvent } from './capi';
@@ -23,6 +23,9 @@ const PORT = process.env.PORT || 3001;
 
 // Initialize Database
 initDb();
+
+// Warmup SDK during startup (ensures credentials are ready)
+warmupSDK().catch(console.error);
 
 // Middleware
 app.use(cors());
