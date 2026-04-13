@@ -124,28 +124,56 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
           cpfAbortControllerRef.current = abortController;
 
           const backendUrl = import.meta.env.VITE_API_URL || '/api';
+          console.log('🔍 Consultando CPF:', clean, 'URL:', `${backendUrl}/consult-cpf/${clean}`);
+          
           const res = await fetch(`${backendUrl}/consult-cpf/${clean}`, {
             signal: abortController.signal
           });
+          
           const result = await res.json();
+          console.log('📬 Resposta do servidor:', result);
 
-          if (res.ok && result.data) {
+          if (!res.ok) {
+            console.error('❌ Erro na resposta:', result.error);
+            setError(result.error?.message || 'Erro ao consultar CPF');
+            return;
+          }
+
+          // Check the structure of the response
+          console.log('📊 Estrutura da resposta:');
+          console.log('   result.data:', result.data);
+          console.log('   result.data.dados:', result.data?.dados);
+          console.log('   result.data.telefones:', result.data?.telefones);
+
+          if (result.data) {
             const dados = result.data.dados;
             const telefones = result.data.telefones;
             const emails = result.data.emails;
             const enderecos = result.data.enderecos;
 
+            console.log('✅ Dados encontrados:', { dados, telefones, emails, enderecos });
+
             // Update all data at once to avoid inconsistent state
             const newData = { name: '', email: '', phone: '', document: formatted };
 
-            if (dados?.NOME) newData.name = dados.NOME;
-            if (telefones && telefones.length > 0) newData.phone = formatPhone(telefones[0].TELEFONE);
-            if (emails && emails.length > 0) newData.email = emails[0].EMAIL;
+            if (dados?.NOME) {
+              newData.name = dados.NOME;
+              console.log('📝 Nome preenchido:', newData.name);
+            }
+            if (telefones && telefones.length > 0) {
+              newData.phone = formatPhone(telefones[0].TELEFONE);
+              console.log('📞 Telefone preenchido:', newData.phone);
+            }
+            if (emails && emails.length > 0) {
+              newData.email = emails[0].EMAIL;
+              console.log('📧 Email preenchido:', newData.email);
+            }
 
             setCustomerData(newData);
 
             if (enderecos && enderecos.length > 0) {
               const end = enderecos[0];
+              console.log('📍 Endereço preenchido:', end);
               setAddressData({
                 cep: formatCEP(end.CEP || ''),
                 street: end.LOGRADOURO || '',
@@ -156,11 +184,15 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                 state: end.UF || ''
               });
             }
+          } else {
+            console.warn('⚠️ result.data não foi encontrado');
+            console.log('Resposta completa:', result);
           }
         } catch (err: any) {
           // Ignore abort errors (user typed something else)
           if (err.name !== 'AbortError') {
-            console.error("Falha ao consultar CPF:", err);
+            console.error("❌ Falha ao consultar CPF:", err);
+            setError(err.message || 'Erro ao consultar CPF');
           }
         } finally {
           setIsLoadingCpf(false);

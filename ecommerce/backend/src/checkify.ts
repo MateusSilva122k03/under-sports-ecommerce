@@ -32,6 +32,14 @@ export async function consultCpf(cpf: string) {
     clearTimeout(timeoutId);
 
     const data: any = await response.json();
+    
+    console.log('🔍 Checkify Response:', {
+      status: response.status,
+      dataStatus: data.status,
+      dataKeys: Object.keys(data),
+      resultadoKeys: data.resultado ? Object.keys(data.resultado) : 'null'
+    });
+    console.log('📦 Full Checkify Response:', JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error('Checkify API Error:', {
@@ -47,6 +55,7 @@ export async function consultCpf(cpf: string) {
       throw new Error(data.message || 'CPF não encontrado ou erro na consulta');
     }
 
+    console.log('✅ Checkify Data Result:', data.resultado);
     return data.resultado;
   } catch (error: any) {
     // Handle specific error types
