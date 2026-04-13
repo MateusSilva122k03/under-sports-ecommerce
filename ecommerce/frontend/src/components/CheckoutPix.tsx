@@ -30,7 +30,7 @@ const INPUT = 'w-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 f
 const LABEL = 'block text-xs text-zinc-400 mb-1.5 font-medium uppercase tracking-wide';
 
 export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
-  const { items, total, clearCart } = useCart();
+  const { items, total, clearCart, removeItem } = useCart();
   const [customerData, setCustomerData] = useState({ name: '', email: '', phone: '', document: '' });
   const [addressData, setAddressData] = useState<AddressData>({ cep: '', street: '', number: '', complement: '', neighborhood: '', city: '', state: '' });
 
@@ -262,13 +262,19 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
     onClose();
   };
 
-  const handleClose = () => { onClose(); };
+  const handleClose = () => {
+    // Reset state before closing to fix modal positioning bug
+    setPaymentData(null);
+    setPaymentStatus('Pending');
+    setError(null);
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-zinc-950 border-l border-zinc-800 flex flex-col shadow-2xl">
+      <div className="relative w-full max-w-md h-[100vh] md:h-[90vh] bg-zinc-950 border border-zinc-800 md:rounded-2xl flex flex-col shadow-2xl md:max-h-[90vh]">
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
@@ -289,9 +295,19 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                 <h3 className="font-bold text-xs uppercase tracking-widest text-zinc-400 mb-3">Resumo do Pedido</h3>
                 <div className="space-y-2 max-h-36 overflow-y-auto">
                   {items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                      <span className="text-zinc-400 truncate flex-1 mr-3">{item.name} ({item.size})</span>
-                      <span className="text-white shrink-0">R$&nbsp;{(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+                    <div key={item.id} className="flex justify-between text-sm group">
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400 truncate flex-1 mr-3">{item.name} ({item.size})</span>
+                          <span className="text-white shrink-0">R$&nbsp;{(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="text-xs text-red-500 hover:text-red-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          Remover
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

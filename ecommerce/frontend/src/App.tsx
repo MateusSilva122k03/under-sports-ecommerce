@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -7,14 +7,22 @@ import ProductGridItem from './components/ProductGridItem';
 import ProductCarousel from './components/ProductCarousel';
 import Banner from './components/Banner';
 import Cart from './components/Cart';
-// import MemoryGameUpsell from './components/MemoryGameUpsell'; // COMENTADO: Até que finalize os testes
+import MemoryGameUpsell from './components/MemoryGameUpsell';
 import Footer from './components/Footer';
 import ProductDetail from './pages/ProductDetail';
 import { categories } from './data/products_categorized';
+import { testIntegrations } from './utils/testIntegrations';
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Test integrations on mount (development only)
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      testIntegrations();
+    }
+  }, []);
 
   const allProducts = useMemo(() => categories.flatMap(cat => cat.products), []);
 
@@ -51,7 +59,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans flex flex-col">
       <Cart />
-      {/* <MemoryGameUpsell /> */}
+      <MemoryGameUpsell />
 
       <Routes>
         <Route

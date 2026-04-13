@@ -55,7 +55,7 @@ interface Card {
 }
 
 export default function MemoryGameUpsell() {
-  const { addItem, showGame, setShowGame } = useCart();
+  const { addItem, removeItem, showGame, setShowGame } = useCart();
   const [cards, setCards] = useState<Card[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
@@ -118,18 +118,23 @@ export default function MemoryGameUpsell() {
     setLastMatchedProduct(null);
   };
 
+  const handleRemoveReward = (productId: string) => {
+    setClaimedIds(prev => prev.filter(id => id !== productId));
+    // The removeItem is called from the checkout component for specific items
+  };
+
   if (!showGame) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 text-white">
       <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setShowGame(false)} />
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         className="relative w-full h-full sm:h-auto sm:max-w-4xl max-h-screen sm:max-h-[90vh] bg-zinc-950 border-0 sm:border border-yellow-500/30 rounded-none sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row"
       >
-        <button 
+        <button
           onClick={() => setShowGame(false)}
           className="absolute top-4 right-4 z-[60] p-2 bg-black/50 rounded-full text-zinc-400 hover:text-white"
         >
@@ -151,7 +156,7 @@ export default function MemoryGameUpsell() {
             {cards.map((card, index) => {
               const isFlipped = flipped.includes(index) || matched.includes(card.productId);
               return (
-                <motion.div 
+                <motion.div
                   key={index}
                   onClick={() => handleCardClick(index)}
                   animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -163,7 +168,7 @@ export default function MemoryGameUpsell() {
                       <span className="text-yellow-500/30 font-black italic text-sm sm:text-base">US</span>
                     </div>
                   ) : (
-                    <div 
+                    <div
                       className="absolute inset-0 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden"
                       style={{ transform: 'rotateY(180deg)' }}
                     >
@@ -188,7 +193,7 @@ export default function MemoryGameUpsell() {
         {/* Reward Bottom Bar / Sidebar */}
         <AnimatePresence>
           {lastMatchedProduct && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
@@ -206,8 +211,12 @@ export default function MemoryGameUpsell() {
                 </div>
               </div>
               <div className="w-full flex gap-2">
-                <button onClick={() => handleClaim(lastMatchedProduct)} className="flex-1 bg-yellow-500 text-zinc-950 font-black py-3 rounded-xl uppercase italic text-xs">Resgatar Oferta</button>
-                <button onClick={() => setLastMatchedProduct(null)} className="lg:hidden p-3 bg-zinc-800 text-zinc-400 rounded-xl"><X size={20} /></button>
+                {claimedIds.includes(lastMatchedProduct.id) ? (
+                  <button onClick={() => handleRemoveReward(lastMatchedProduct.id)} className="flex-1 bg-red-500/80 text-white font-black py-3 rounded-xl uppercase italic text-xs hover:bg-red-600 transition-colors">Remover da Oferta</button>
+                ) : (
+                  <button onClick={() => handleClaim(lastMatchedProduct)} className="flex-1 bg-yellow-500 text-zinc-950 font-black py-3 rounded-xl uppercase italic text-xs hover:bg-yellow-400 transition-colors">Resgatar Oferta</button>
+                )}
+                <button onClick={() => setLastMatchedProduct(null)} className="lg:hidden p-3 bg-zinc-800 text-zinc-400 rounded-xl hover:bg-zinc-700 transition-colors"><X size={20} /></button>
               </div>
             </motion.div>
           )}
