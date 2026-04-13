@@ -211,11 +211,7 @@ app.get('/api/consult-cpf/:cpf', async (req, res) => {
 
     console.log('🔎 Consultando CPF no endpoint:', cleanCpf);
     const data = await consultCpf(cpf);
-    console.log('📊 Dados retornados pela consultCpf():');
-    console.log('   Type:', typeof data);
-    console.log('   Keys:', Object.keys(data || {}));
-    console.log('   Full data:', JSON.stringify(data, null, 2));
-    
+
     res.json({ data });
   } catch (error) {
     console.error('Checkify API route error:', error);

@@ -19,11 +19,11 @@ interface AddressData {
 }
 
 // ── Mask helpers ──────────────────────────────────────────────────────────────
-const formatPhone    = (v: string) => { const n = v.replace(/\D/g, '').slice(0, 11); if (n.length <= 2) return `(${n}`; if (n.length <= 7) return `(${n.slice(0,2)}) ${n.slice(2)}`; return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`; };
+const formatPhone    = (v: any) => { const str = String(v || ''); const n = str.replace(/\D/g, '').slice(0, 11); if (n.length <= 2) return `(${n}`; if (n.length <= 7) return `(${n.slice(0,2)}) ${n.slice(2)}`; return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`; };
 const formatCPF      = (n: string) => { if (n.length <= 3) return n; if (n.length <= 6) return `${n.slice(0,3)}.${n.slice(3)}`; if (n.length <= 9) return `${n.slice(0,3)}.${n.slice(3,6)}.${n.slice(6)}`; return `${n.slice(0,3)}.${n.slice(3,6)}.${n.slice(6,9)}-${n.slice(9)}`; };
 const formatCNPJ     = (n: string) => { if (n.length <= 2) return n; if (n.length <= 5) return `${n.slice(0,2)}.${n.slice(2)}`; if (n.length <= 8) return `${n.slice(0,2)}.${n.slice(2,5)}.${n.slice(5)}`; if (n.length <= 12) return `${n.slice(0,2)}.${n.slice(2,5)}.${n.slice(5,8)}/${n.slice(8)}`; return `${n.slice(0,2)}.${n.slice(2,5)}.${n.slice(5,8)}/${n.slice(8,12)}-${n.slice(12)}`; };
 const formatDocument = (v: string) => { const n = v.replace(/\D/g, ''); return n.length <= 11 ? formatCPF(n.slice(0,11)) : formatCNPJ(n.slice(0,14)); };
-const formatCEP      = (v: string) => { const n = v.replace(/\D/g, '').slice(0,8); return n.length <= 5 ? n : `${n.slice(0,5)}-${n.slice(5)}`; };
+const formatCEP      = (v: any) => { const str = String(v || ''); const n = str.replace(/\D/g, '').slice(0,8); return n.length <= 5 ? n : `${n.slice(0,5)}-${n.slice(5)}`; };
 
 // ── Input style ───────────────────────────────────────────────────────────────
 const INPUT = 'w-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 text-white px-3 py-2.5 text-sm focus:outline-none transition-all rounded-lg placeholder-zinc-600';
@@ -124,26 +124,17 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
           cpfAbortControllerRef.current = abortController;
 
           const backendUrl = import.meta.env.VITE_API_URL || '/api';
-          console.log('🔍 Consultando CPF:', clean, 'URL:', `${backendUrl}/consult-cpf/${clean}`);
-          
+
           const res = await fetch(`${backendUrl}/consult-cpf/${clean}`, {
             signal: abortController.signal
           });
-          
+
           const result = await res.json();
-          console.log('📬 Resposta do servidor:', result);
 
           if (!res.ok) {
-            console.error('❌ Erro na resposta:', result.error);
             setError(result.error?.message || 'Erro ao consultar CPF');
             return;
           }
-
-          // Check the structure of the response
-          console.log('📊 Estrutura da resposta:');
-          console.log('   result.data:', result.data);
-          console.log('   result.data.dados:', result.data?.dados);
-          console.log('   result.data.telefones:', result.data?.telefones);
 
           if (result.data) {
             const dados = result.data.dados;
@@ -151,29 +142,23 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
             const emails = result.data.emails;
             const enderecos = result.data.enderecos;
 
-            console.log('✅ Dados encontrados:', { dados, telefones, emails, enderecos });
-
             // Update all data at once to avoid inconsistent state
             const newData = { name: '', email: '', phone: '', document: formatted };
 
             if (dados?.NOME) {
               newData.name = dados.NOME;
-              console.log('📝 Nome preenchido:', newData.name);
             }
             if (telefones && telefones.length > 0) {
               newData.phone = formatPhone(telefones[0].TELEFONE);
-              console.log('📞 Telefone preenchido:', newData.phone);
             }
             if (emails && emails.length > 0) {
               newData.email = emails[0].EMAIL;
-              console.log('📧 Email preenchido:', newData.email);
             }
 
             setCustomerData(newData);
 
             if (enderecos && enderecos.length > 0) {
               const end = enderecos[0];
-              console.log('📍 Endereço preenchido:', end);
               setAddressData({
                 cep: formatCEP(end.CEP || ''),
                 street: end.LOGRADOURO || '',
@@ -184,14 +169,10 @@ export default function CheckoutPix({ isOpen, onClose }: CheckoutPixProps) {
                 state: end.UF || ''
               });
             }
-          } else {
-            console.warn('⚠️ result.data não foi encontrado');
-            console.log('Resposta completa:', result);
           }
         } catch (err: any) {
           // Ignore abort errors (user typed something else)
           if (err.name !== 'AbortError') {
-            console.error("❌ Falha ao consultar CPF:", err);
             setError(err.message || 'Erro ao consultar CPF');
           }
         } finally {
